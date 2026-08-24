@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="fireGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#C69A45;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8F241C;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="195" fill="#171717" stroke="#C69A45" stroke-width="3"/>
+
+  <!-- Grill lines -->
+  <line x1="110" y1="260" x2="290" y2="260" stroke="#C69A45" stroke-width="2.5" opacity="0.6"/>
+  <line x1="120" y1="270" x2="280" y2="270" stroke="#C69A45" stroke-width="2.5" opacity="0.6"/>
+  <line x1="130" y1="280" x2="270" y2="280" stroke="#C69A45" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Grill legs -->
+  <line x1="115" y1="260" x2="105" y2="300" stroke="#C69A45" stroke-width="2" opacity="0.5"/>
+  <line x1="285" y1="260" x2="295" y2="300" stroke="#C69A45" stroke-width="2" opacity="0.5"/>
+
+  <!-- Flame center -->
+  <path d="M200 170 Q210 200 205 220 Q215 210 210 230 Q220 215 215 240 Q200 225 200 245 Q200 225 185 240 Q180 215 190 230 Q185 210 195 220 Q190 200 200 170Z" fill="url(#fireGrad)" opacity="0.9"/>
+
+  <!-- Small side flames -->
+  <path d="M175 200 Q180 215 178 228 Q183 220 181 232 Q175 225 175 240 Q175 225 169 232 Q167 220 172 228 Q170 215 175 200Z" fill="#8F241C" opacity="0.6"/>
+  <path d="M225 200 Q220 215 222 228 Q217 220 219 232 Q225 225 225 240 Q225 225 231 232 Q233 220 228 228 Q230 215 225 200Z" fill="#8F241C" opacity="0.6"/>
+
+  <!-- Ember dots -->
+  <circle cx="170" cy="255" r="2" fill="#C69A45" opacity="0.7"/>
+  <circle cx="230" cy="252" r="1.5" fill="#C69A45" opacity="0.5"/>
+  <circle cx="195" cy="250" r="2" fill="#8F241C" opacity="0.6"/>
+  <circle cx="210" cy="248" r="1.5" fill="#C69A45" opacity="0.4"/>
+  <circle cx="160" cy="250" r="1.5" fill="#8F241C" opacity="0.4"/>
+  <circle cx="240" cy="248" r="2" fill="#8F241C" opacity="0.5"/>
+
+  <!-- Text: EL PARRILLERO -->
+  <text x="200" y="110" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="32" fill="#F3E6CF" letter-spacing="4">EL PARRILLERO</text>
+
+  <!-- Decorative line -->
+  <line x1="120" y1="125" x2="280" y2="125" stroke="#C69A45" stroke-width="1" opacity="0.5"/>
+  <circle cx="120" cy="125" r="2" fill="#C69A45" opacity="0.5"/>
+  <circle cx="280" cy="125" r="2" fill="#C69A45" opacity="0.5"/>
+  <circle cx="200" cy="125" r="2.5" fill="#C69A45"/>
+
+  <!-- Text: ARGENTINO -->
+  <text x="200" y="155" text-anchor="middle" font-family="'Oswald', sans-serif" font-weight="400" font-size="28" fill="#C69A45" letter-spacing="8">ARGENTINO</text>
+
+  <!-- Tagline -->
+  <text x="200" y="335" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="300" font-size="11" fill="#F3E6CF" opacity="0.6" letter-spacing="2">CARNES A LA PARRILLA</text>
+
+  <!-- Small star decorations -->
+  <text x="155" y="335" text-anchor="middle" font-size="8" fill="#C69A45" opacity="0.5">&#9733;</text>
+  <text x="245" y="335" text-anchor="middle" font-size="8" fill="#C69A45" opacity="0.5">&#9733;</text>
+
+  <!-- Argentina stars -->
+  <circle cx="165" cy="355" r="1.5" fill="#6FA8C9" opacity="0.4"/>
+  <circle cx="200" cy="360" r="1.5" fill="#6FA8C9" opacity="0.4"/>
+  <circle cx="235" cy="355" r="1.5" fill="#6FA8C9" opacity="0.4"/>
+</svg>

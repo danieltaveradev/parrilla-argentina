@@ -1,10 +1,2388 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<title>Github Pages Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Parrillero Argentino - Carnes a la Parrilla</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
-
 <body>
-Adversus - Pages Test
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="fire-loader">
+                <div class="fire-container">
+                    <div class="fire">
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                    </div>
+                    <div class="fire-particles">
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                        <div class="spark"></div>
+                    </div>
+                    <div class="fire-glow"></div>
+                    <div class="fire-embers">
+                        <div class="ember"></div>
+                        <div class="ember"></div>
+                        <div class="ember"></div>
+                        <div class="ember"></div>
+                        <div class="ember"></div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="loader-title">El Parrillero Argentino</h2>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="parrillero argentino.jpg" alt="El Parrillero Argentino" class="logo-img">
+                <div class="logo-text">
+                    <span class="logo-main">El Parrillero</span>
+                    <span class="logo-sub">Argentino</span>
+                </div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="#menu"><i class="fas fa-utensils"></i> Menú</a></li>
+                <li><a href="#bar"><i class="fas fa-beer"></i> Bar</a></li>
+                <li><a href="#mision"><i class="fas fa-bullseye"></i> Misión</a></li>
+                <li><a href="#valores"><i class="fas fa-heart"></i> Valores</a></li>
+                <li><a href="#reservacion"><i class="fas fa-calendar-check"></i> Reservaciones</a></li>
+                <li><a href="#contacto"><i class="fas fa-envelope"></i> Contacto</a></li>
+                <li><a href="#politicas"><i class="fas fa-book-open"></i> Políticas</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section id="inicio" class="hero">
+        <div class="hero-bg">
+            <img src="parrillero argentino.jpg" alt="El Parrillero Argentino">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-logo-main">
+                <img src="parrillero argentino.jpg" alt="El Parrillero Argentino">
+            </div>
+            <div class="hero-badge">
+                <i class="fas fa-fire"></i> Auténtico Sabor Argentino
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">El Mejor</span>
+                <span class="title-main">Parrillero</span>
+                <span class="title-accent">de la Ciudad</span>
+            </h1>
+            <p class="hero-subtitle">Carnes selectas cocinadas al carbón con la tradición argentina que solo el fuego puede dar</p>
+            <div class="hero-buttons">
+                <a href="#menu" class="btn-primary">
+                    <i class="fas fa-utensils"></i> Ver Menú
+                </a>
+                <a href="#reservacion" class="btn-secondary">
+                    <i class="fas fa-calendar"></i> Reservar Mesa
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" data-target="15">0</span>
+                    <span class="stat-label">Años de Experiencia</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="500">0</span>
+                    <span class="stat-label">Clientes Felices</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="50">0</span>
+                    <span class="stat-label">Platos Únicos</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Desplázate</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="menu" class="menu-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag"><i class="fas fa-utensils"></i> Nuestros Platos</span>
+                <h2 class="section-title">Menú <span class="highlight">Parrillero</span></h2>
+                <p class="section-subtitle">Carnes selectas preparadas al estilo argentino con los mejores cortes</p>
+            </div>
+
+            <div class="menu-tabs">
+                <button class="tab-btn active" data-tab="parrilla">
+                    <i class="fas fa-fire"></i>
+                    <span>Parrilla</span>
+                </button>
+                <button class="tab-btn" data-tab="entradas">
+                    <i class="fas fa-bread-slice"></i>
+                    <span>Entradas</span>
+                </button>
+                <button class="tab-btn" data-tab="acompanamientos">
+                    <i class="fas fa-seedling"></i>
+                    <span>Acompañ.</span>
+                </button>
+                <button class="tab-btn" data-tab="ensaladas">
+                    <i class="fas fa-leaf"></i>
+                    <span>Ensaladas</span>
+                </button>
+                <button class="tab-btn" data-tab="postres">
+                    <i class="fas fa-ice-cream"></i>
+                    <span>Postres</span>
+                </button>
+                <button class="tab-btn" data-tab="salsas">
+                    <i class="fas fa-tint"></i>
+                    <span>Salsas</span>
+                </button>
+            </div>
+
+            <div class="menu-content">
+                <!-- PARRILLA -->
+                <div class="menu-grid active" id="parrilla">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/parrilla/corte%20parrillero.png" alt="Corte del Parrillero">
+                            <div class="card-overlay"><span class="card-tag">Popular</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Corte del Parrillero</h3>
+                            <p>Corte de res seleccionado, preparado a la parrilla sobre brasas y terminado con sal parrillera. Porción: 350g</p>
+                            <div class="card-details">
+                                <small><i class="fas fa-info-circle"></i> Punto medio recomendado</small>
+                                <small><i class="fas fa-leaf"></i> Acompañamientos: Papas criollas y ensalada</small>
+                                <small><i class="fas fa-tint"></i> Salsas: Chimichurri, criolla o de la casa</small>
+                            </div>
+                            <div class="card-footer">
+                                <div class="price">$49.900</div>
+                                <button class="btn-add" onclick="addToReservation('Corte del Parrillero', 49900, 'galeria%20pagina%20web/parrilla/corte%20parrillero.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/parrilla/chori%20de%20la%20casa.png" alt="Chorizo Argentino">
+                            <div class="card-overlay"><span class="card-tag">Popular</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Chori de la Casa</h3>
+                            <p>Chorizo estilo argentino elaborado con mezcla de carnes y especias, cocinado lentamente sobre la parrilla. Porción: 2 unidades</p>
+                            <div class="card-details">
+                                <small><i class="fas fa-info-circle"></i> Ideal como entrada para compartir</small>
+                                <small><i class="fas fa-leaf"></i> Acompañamientos: Pan artesanal y salsa criolla</small>
+                                <small><i class="fas fa-tint"></i> Salsas: Chimichurri y de la casa</small>
+                            </div>
+                            <div class="card-footer">
+                                <div class="price">$28.900</div>
+                                <button class="btn-add" onclick="addToReservation('Chorizo Argentino', 28900, 'galeria%20pagina%20web/parrilla/chori%20de%20la%20casa.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/parrilla/chicharron%20a%20las%20brasas.png" alt="Chicharrón a las Brasas">
+                            <div class="card-overlay"><span class="card-tag">Popular</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Chicharrón a las Brasas</h3>
+                            <p>Chicharrón de cerdo con técnica de cocción lenta y terminado sobre la parrilla para conseguir una textura crujiente. Porción: 300g</p>
+                            <div class="card-details">
+                                <small><i class="fas fa-info-circle"></i> Excelente para compartir entre dos personas</small>
+                                <small><i class="fas fa-leaf"></i> Acompañamientos: Papa criolla y ají de la casa</small>
+                                <small><i class="fas fa-tint"></i> Salsas: Chimichurri, ají parrillero</small>
+                            </div>
+                            <div class="card-footer">
+                                <div class="price">$34.900</div>
+                                <button class="btn-add" onclick="addToReservation('Chicharrón a las Brasas', 34900, 'galeria%20pagina%20web/parrilla/chicharron%20a%20las%20brasas.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/parrilla/Picada%20del%20Parrillero.png" alt="Picada del Parrillero">
+                            <div class="card-overlay"><span class="card-tag">Chef Recomienda</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Picada del Parrillero</h3>
+                            <p>Selección para compartir: res, chorizo argentino, chicharrón y carne de cerdo. Porción: 900g</p>
+                            <div class="card-details">
+                                <small><i class="fas fa-info-circle"></i> Ideal para 3-4 personas</small>
+                                <small><i class="fas fa-leaf"></i> Acompañamientos: Papas criollas, ensalada y pan artesanal</small>
+                                <small><i class="fas fa-tint"></i> Salsas: Chimichurri, criolla y de la casa</small>
+                            </div>
+                            <div class="card-footer">
+                                <div class="price">$89.900</div>
+                                <button class="btn-add" onclick="addToReservation('Picada del Parrillero', 89900, 'galeria%20pagina%20web/parrilla/Picada%20del%20Parrillero.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/parrilla/costilla%20del%20fuego.jfif" alt="Costilla del Fuego">
+                            <div class="card-overlay"><span class="card-tag">Especial</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <h3>Costilla del Fuego</h3>
+                            <p>Costilla de cerdo marinada con especias de la casa y terminada lentamente sobre brasas. Porción: 450g</p>
+                            <div class="card-details">
+                                <small><i class="fas fa-info-circle"></i> Opción diferente a la carne de res</small>
+                                <small><i class="fas fa-leaf"></i> Acompañamientos: Papas rústicas y ensalada</small>
+                                <small><i class="fas fa-tint"></i> Salsas: BBQ de la casa, chimichurri</small>
+                            </div>
+                            <div class="card-footer">
+                                <div class="price">$44.900</div>
+                                <button class="btn-add" onclick="addToReservation('Costilla del Fuego', 44900, 'galeria%20pagina%20web/parrilla/costilla%20del%20fuego.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ENTRADAS -->
+                <div class="menu-grid" id="entradas">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/fotos%20comida/Entradas.jpg" alt="Empanadas">
+                            <div class="card-overlay"><span class="card-tag">Clásica</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Empanadas Argentinas de Carne</h3>
+                            <p>Empanadas rellenas de carne seasoning tradicional argentino</p>
+                            <div class="card-footer">
+                                <div class="price">$18.900</div>
+                                <button class="btn-add" onclick="addToReservation('Empanadas Argentinas', 18900, 'galeria%20pagina%20web/fotos%20comida/Entradas.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/fotos%20comida/Entradas.jpg" alt="Provoleta">
+                            <div class="card-overlay"><span class="card-tag">Recomendada</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Provoleta a la Parrilla</h3>
+                            <p>Queso provolone gratinado sobre la parrilla con orégano</p>
+                            <div class="card-footer">
+                                <div class="price">$24.900</div>
+                                <button class="btn-add" onclick="addToReservation('Provoleta a la Parrilla', 24900, 'galeria%20pagina%20web/fotos%20comida/Entradas.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/fotos%20comida/Entradas.jpg" alt="Pan de Ajo">
+                            <div class="card-overlay"><span class="card-tag">Simple</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Pan de Ajo al Carbón</h3>
+                            <p>Pan artesanal con ajo y mantequilla cocinado al carbón</p>
+                            <div class="card-footer">
+                                <div class="price">$12.900</div>
+                                <button class="btn-add" onclick="addToReservation('Pan de Ajo al Carbón', 12900, 'galeria%20pagina%20web/fotos%20comida/Entradas.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/fotos%20comida/Entradas.jpg" alt="Chorizos Parrilleros">
+                            <div class="card-overlay"><span class="card-tag">Popular</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Chorizos Parrilleros</h3>
+                            <p>Chorizos tradicionales cocidos lentamente sobre brasas</p>
+                            <div class="card-footer">
+                                <div class="price">$19.900</div>
+                                <button class="btn-add" onclick="addToReservation('Chorizos Parrilleros', 19900, 'galeria%20pagina%20web/fotos%20comida/Entradas.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACOMPAÑAMIENTOS -->
+                <div class="menu-grid" id="acompanamientos">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/acompa%C3%B1antes/papas%20criollas%20al%20carbon.png" alt="Papas Criollas">
+                            <div class="card-overlay"><span class="card-tag">Clásica</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Papas Criollas al Carbón</h3>
+                            <p>Papas criollas cocinadas al carbón con sal parrillera</p>
+                            <div class="card-footer">
+                                <div class="price">$11.900</div>
+                                <button class="btn-add" onclick="addToReservation('Papas Criollas al Carbón', 11900, 'galeria%20pagina%20web/acompa%C3%B1antes/papas%20criollas%20al%20carbon.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/acompa%C3%B1antes/papas%20rusticas.png" alt="Papas Rústicas">
+                            <div class="card-overlay"><span class="card-tag">Casera</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Papas Rústicas</h3>
+                            <p>Papas cortadas gruesas y doradas al horno</p>
+                            <div class="card-footer">
+                                <div class="price">$12.900</div>
+                                <button class="btn-add" onclick="addToReservation('Papas Rústicas', 12900, 'galeria%20pagina%20web/acompa%C3%B1antes/papas%20rusticas.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/acompa%C3%B1antes/yuca%20dorada.png" alt="Yuca Dorada">
+                            <div class="card-overlay"><span class="card-tag">Crujiente</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Yuca Dorada</h3>
+                            <p>Yuca frita hasta quedar dorada y crujiente</p>
+                            <div class="card-footer">
+                                <div class="price">$10.900</div>
+                                <button class="btn-add" onclick="addToReservation('Yuca Dorada', 10900, 'galeria%20pagina%20web/acompa%C3%B1antes/yuca%20dorada.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop" alt="Pan Artesanal">
+                            <div class="card-overlay"><span class="card-tag">Fresco</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Pan Artesanal</h3>
+                            <p>Pan recién horneado de la casa</p>
+                            <div class="card-footer">
+                                <div class="price">$7.900</div>
+                                <button class="btn-add" onclick="addToReservation('Pan Artesanal', 7900, 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ENSALADAS -->
+                <div class="menu-grid" id="ensaladas">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/ensaladas/Ensalada%20Criolla.jpeg" alt="Ensalada Criolla">
+                            <div class="card-overlay"><span class="card-tag">Fresca</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ensalada Criolla</h3>
+                            <p>Tomate, cebolla, lechuga y cilantro con vinagreta</p>
+                            <div class="card-footer">
+                                <div class="price">$12.900</div>
+                                <button class="btn-add" onclick="addToReservation('Ensalada Criolla', 12900, 'galeria%20pagina%20web/ensaladas/Ensalada%20Criolla.jpeg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/ensaladas/Ensalada%20Verde.jpeg" alt="Ensalada Verde">
+                            <div class="card-overlay"><span class="card-tag">Ligera</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ensalada Verde</h3>
+                            <p>Lechuga, espinaca, pepino y aguacate</p>
+                            <div class="card-footer">
+                                <div class="price">$13.900</div>
+                                <button class="btn-add" onclick="addToReservation('Ensalada Verde', 13900, 'galeria%20pagina%20web/ensaladas/Ensalada%20Verde.jpeg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/ensaladas/Ensalada%20de%20Tomate%20y%20Cebolla.jpeg" alt="Ensalada de Tomate">
+                            <div class="card-overlay"><span class="card-tag">Clásica</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ensalada de Tomate y Cebolla</h3>
+                            <p>Tomate maduro y cebolla morada con aderezo</p>
+                            <div class="card-footer">
+                                <div class="price">$11.900</div>
+                                <button class="btn-add" onclick="addToReservation('Ensalada de Tomate y Cebolla', 11900, 'galeria%20pagina%20web/ensaladas/Ensalada%20de%20Tomate%20y%20Cebolla.jpeg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/ensaladas/Ensalada%20de%20la%20Casa.jpeg" alt="Ensalada de la Casa">
+                            <div class="card-overlay"><span class="card-tag">Especial</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ensalada de la Casa</h3>
+                            <p>Mezcla de lechugas, nueces, queso goat y vinagreta de miel</p>
+                            <div class="card-footer">
+                                <div class="price">$15.900</div>
+                                <button class="btn-add" onclick="addToReservation('Ensalada de la Casa', 15900, 'galeria%20pagina%20web/ensaladas/Ensalada%20de%20la%20Casa.jpeg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- POSTRES -->
+                <div class="menu-grid" id="postres">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/fotos%20comida/Postres.jpg" alt="Alfajor">
+                            <div class="card-overlay"><span class="card-tag">Argentino</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Alfajor Argentino</h3>
+                            <p>Alfajor tradicional relleno de dulce de leche</p>
+                            <div class="card-footer">
+                                <div class="price">$10.900</div>
+                                <button class="btn-add" onclick="addToReservation('Alfajor Argentino', 10900, 'galeria%20pagina%20web/fotos%20comida/Postres.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/fotos%20comida/Postres.jpg" alt="Flan">
+                            <div class="card-overlay"><span class="card-tag">Casero</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Flan de Dulce de Leche</h3>
+                            <p>Flan casero con dulce de leche y crema chantilly</p>
+                            <div class="card-footer">
+                                <div class="price">$14.900</div>
+                                <button class="btn-add" onclick="addToReservation('Flan de Dulce de Leche', 14900, 'galeria%20pagina%20web/fotos%20comida/Postres.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/fotos%20comida/Postres.jpg" alt="Brownie">
+                            <div class="card-overlay"><span class="card-tag">Chocolate</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Brownie con Helado</h3>
+                            <p>Brownie tibio de chocolate con helado de vainilla</p>
+                            <div class="card-footer">
+                                <div class="price">$16.900</div>
+                                <button class="btn-add" onclick="addToReservation('Brownie con Helado', 16900, 'galeria%20pagina%20web/fotos%20comida/Postres.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/fotos%20comida/Postres.jpg" alt="Cheesecake">
+                            <div class="card-overlay"><span class="card-tag">Especial</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Cheesecake de la Casa</h3>
+                            <p>Cheesecake cremoso con salsa de frutos rojos</p>
+                            <div class="card-footer">
+                                <div class="price">$15.900</div>
+                                <button class="btn-add" onclick="addToReservation('Cheesecake de la Casa', 15900, 'galeria%20pagina%20web/fotos%20comida/Postres.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SALSAS -->
+                <div class="menu-grid" id="salsas">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/salsas/chimichurri.jpg" alt="Chimichurri">
+                            <div class="card-overlay"><span class="card-tag">Clásica</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Chimichurri</h3>
+                            <p>Salsa argentina tradicional con perejil, ajo y orégano</p>
+                            <div class="card-footer">
+                                <div class="price">$4.900</div>
+                                <button class="btn-add" onclick="addToReservation('Chimichurri', 4900, 'galeria%20pagina%20web/salsas/chimichurri.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/salsas/salsa%20criolla.jfif" alt="Salsa Criolla">
+                            <div class="card-overlay"><span class="card-tag">Fresca</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Salsa Criolla</h3>
+                            <p>Tomate, cebolla, pimiento y vinagre</p>
+                            <div class="card-footer">
+                                <div class="price">$4.900</div>
+                                <button class="btn-add" onclick="addToReservation('Salsa Criolla', 4900, 'galeria%20pagina%20web/salsas/salsa%20criolla.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/salsas/salsa%20bbq.jfif" alt="BBQ">
+                            <div class="card-overlay"><span class="card-tag">Ahumada</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>BBQ de la Casa</h3>
+                            <p>Salsa barbacoa ahumada de la casa</p>
+                            <div class="card-footer">
+                                <div class="price">$4.900</div>
+                                <button class="btn-add" onclick="addToReservation('BBQ de la Casa', 4900, 'galeria%20pagina%20web/salsas/salsa%20bbq.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/salsas/Aj%C3%AD%20Parrillero.jfif" alt="Ají Parrillero">
+                            <div class="card-overlay"><span class="card-tag">Picante</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ají Parrillero</h3>
+                            <p>Salsa picante artesanal para carnes</p>
+                            <div class="card-footer">
+                                <div class="price">$3.900</div>
+                                <button class="btn-add" onclick="addToReservation('Ají Parrillero', 3900, 'galeria%20pagina%20web/salsas/Aj%C3%AD%20Parrillero.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/salsas/Salsa%20Especial%20del%20Parrillero.jfif" alt="Salsa Especial">
+                            <div class="card-overlay"><span class="card-tag">Secreta</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Salsa Especial del Parrillero</h3>
+                            <p>Nuestra salsa secreta con ingredientes seleccionados</p>
+                            <div class="card-footer">
+                                <div class="price">$5.900</div>
+                                <button class="btn-add" onclick="addToReservation('Salsa Especial del Parrillero', 5900, 'galeria%20pagina%20web/salsas/Salsa%20Especial%20del%20Parrillero.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="bar" class="menu-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag"><i class="fas fa-beer"></i> Bebidas Premium</span>
+                <h2 class="section-title">Bar <span class="highlight">Parrillero</span></h2>
+                <p class="section-subtitle">Cervezas nacionales, importadas, licores y vinos seleccionados</p>
+            </div>
+
+            <div class="menu-tabs">
+                <button class="tab-btn active" data-tab="nacionales">
+                    <i class="fas fa-flag"></i>
+                    <span>Nacionales</span>
+                </button>
+                <button class="tab-btn" data-tab="exportadas">
+                    <i class="fas fa-globe-americas"></i>
+                    <span>Exportadas</span>
+                </button>
+                <button class="tab-btn" data-tab="licores">
+                    <i class="fas fa-wine-bottle"></i>
+                    <span>Licores</span>
+                </button>
+                <button class="tab-btn" data-tab="vinos">
+                    <i class="fas fa-wine-glass-alt"></i>
+                    <span>Vinos</span>
+                </button>
+            </div>
+
+            <div class="menu-content">
+                <div class="menu-grid active" id="nacionales">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/cervezas%20nacionales/aguila-original.png" alt="Águila">
+                            <div class="card-overlay"><span class="card-tag">Clásica</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                            </div>
+                            <h3>Águila</h3>
+                            <p>Cerveza 330ml - Lager colombiana</p>
+                            <div class="card-footer">
+                                <div class="price">$4.500</div>
+                                <button class="btn-add" onclick="addToReservation('Águila 330ml', 4500, 'galeria%20pagina%20web/bar/cervezas%20nacionales/aguila-original.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/cervezas%20nacionales/POKER.jfif" alt="Poker">
+                            <div class="card-overlay"><span class="card-tag">Popular</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                            </div>
+                            <h3>Poker</h3>
+                            <p>Cerveza 330ml - Lager dorada</p>
+                            <div class="card-footer">
+                                <div class="price">$4.500</div>
+                                <button class="btn-add" onclick="addToReservation('Poker 330ml', 4500, 'galeria%20pagina%20web/bar/cervezas%20nacionales/POKER.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/cervezas%20nacionales/aguila-light.png" alt="Águila Light">
+                            <div class="card-overlay"><span class="card-tag">Refrescante</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Águila Light</h3>
+                            <p>Cerveza 330ml - Ligera y refrescante</p>
+                            <div class="card-footer">
+                                <div class="price">$4.000</div>
+                                <button class="btn-add" onclick="addToReservation('Águila Light 330ml', 4000, 'galeria%20pagina%20web/bar/cervezas%20nacionales/aguila-light.png')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/cervezas%20nacionales/cerveza-pilsen.jpg" alt="Pilsen">
+                            <div class="card-overlay"><span class="card-tag">Tradicional</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <h3>Cerveza Pilsen</h3>
+                            <p>Cerveza 330ml - Sabor auténtico</p>
+                            <div class="card-footer">
+                                <div class="price">$4.000</div>
+                                <button class="btn-add" onclick="addToReservation('Cerveza Pilsen 330ml', 4000, 'galeria%20pagina%20web/bar/cervezas%20nacionales/cerveza-pilsen.jpg')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/cervezas%20nacionales/club%20colombia.jfif" alt="Club Colombia">
+                            <div class="card-overlay"><span class="card-tag">Premium</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Club Colombia</h3>
+                            <p>Cerveza 330ml - Dorada premium</p>
+                            <div class="card-footer">
+                                <div class="price">$6.500</div>
+                                <button class="btn-add" onclick="addToReservation('Club Colombia 330ml', 6500, 'galeria%20pagina%20web/bar/cervezas%20nacionales/club%20colombia.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-grid" id="exportadas">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1592478384392-32aaa92ee421?w=400&h=300&fit=crop" alt="Corona">
+                            <div class="card-overlay"><span class="card-tag">México</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Corona Extra</h3>
+                            <p>Cerveza 330ml - Lager mexicana</p>
+                            <div class="card-footer">
+                                <div class="price">$8.000</div>
+                                <button class="btn-add" onclick="addToReservation('Corona Extra 330ml', 8000, 'https://images.unsplash.com/photo-1592478384392-32aaa92ee421?w=100&h=100&fit=crop')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1618885472179-5e474019f2a9?w=400&h=300&fit=crop" alt="Heineken">
+                            <div class="card-overlay"><span class="card-tag">Holanda</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Heineken</h3>
+                            <p>Cerveza 330ml - Lager holandesa</p>
+                            <div class="card-footer">
+                                <div class="price">$8.500</div>
+                                <button class="btn-add" onclick="addToReservation('Heineken 330ml', 8500, 'https://images.unsplash.com/photo-1618885472179-5e474019f2a9?w=100&h=100&fit=crop')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1572177200344-496ea8c15e1f?w=400&h=300&fit=crop" alt="Budweiser">
+                            <div class="card-overlay"><span class="card-tag">EE.UU.</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                            </div>
+                            <h3>Budweiser</h3>
+                            <p>Cerveza 330ml - Lager americana</p>
+                            <div class="card-footer">
+                                <div class="price">$8.000</div>
+                                <button class="btn-add" onclick="addToReservation('Budweiser 330ml', 8000, 'https://images.unsplash.com/photo-1572177200344-496ea8c15e1f?w=100&h=100&fit=crop')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1695406091840-5b820df68db0?w=400&h=300&fit=crop" alt="Stella Artois">
+                            <div class="card-overlay"><span class="card-tag">Bélgica</span></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <h3>Stella Artois</h3>
+                            <p>Cerveza 330ml - Lager belga premium</p>
+                            <div class="card-footer">
+                                <div class="price">$10.000</div>
+                                <button class="btn-add" onclick="addToReservation('Stella Artois 330ml', 10000, 'https://images.unsplash.com/photo-1695406091840-5b820df68db0?w=100&h=100&fit=crop')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-grid" id="licores">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/aguardiente%20rojo.jfif" alt="Aguardiente Rojo">
+                            <div class="card-overlay"><span class="card-tag">Colombiano</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Aguardiente Rojo</h3>
+                            <p>Tradicional colombiano</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Rojo - Media', 18000, 'galeria%20pagina%20web/bar/licores/aguardiente%20rojo.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$18.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Rojo - Botella', 38000, 'galeria%20pagina%20web/bar/licores/aguardiente%20rojo.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$38.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Rojo - Litro', 65000, 'galeria%20pagina%20web/bar/licores/aguardiente%20rojo.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$65.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/aguardiente%20azul.jfif" alt="Aguardiente Azul">
+                            <div class="card-overlay"><span class="card-tag">Colombiano</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Aguardiente Azul</h3>
+                            <p>Suave y aromático</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Azul - Media', 18000, 'galeria%20pagina%20web/bar/licores/aguardiente%20azul.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$18.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Azul - Botella', 38000, 'galeria%20pagina%20web/bar/licores/aguardiente%20azul.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$38.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Azul - Litro', 65000, 'galeria%20pagina%20web/bar/licores/aguardiente%20azul.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$65.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/aguardiente%20verde.jfif" alt="Aguardiente Verde">
+                            <div class="card-overlay"><span class="card-tag">Colombiano</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Aguardiente Verde</h3>
+                            <p>Refrescante</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Verde - Media', 18000, 'galeria%20pagina%20web/bar/licores/aguardiente%20verde.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$18.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Verde - Botella', 38000, 'galeria%20pagina%20web/bar/licores/aguardiente%20verde.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$38.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Aguardiente Verde - Litro', 65000, 'galeria%20pagina%20web/bar/licores/aguardiente%20verde.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$65.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/red%20label.jfif" alt="Red Label">
+                            <div class="card-overlay"><span class="card-tag">Whisky</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Red Label</h3>
+                            <p>Johnnie Walker</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Red Label - Media', 35000, 'galeria%20pagina%20web/bar/licores/red%20label.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$35.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Red Label - Botella', 75000, 'galeria%20pagina%20web/bar/licores/red%20label.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$75.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Red Label - Litro', 130000, 'galeria%20pagina%20web/bar/licores/red%20label.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$130.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/ballantones.jfif" alt="Ballantine's">
+                            <div class="card-overlay"><span class="card-tag">Whisky</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ballantine's</h3>
+                            <p>Finest Scotch</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Ballantines - Media', 40000, 'galeria%20pagina%20web/bar/licores/ballantones.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$40.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ballantines - Botella', 85000, 'galeria%20pagina%20web/bar/licores/ballantones.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$85.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ballantines - Litro', 150000, 'galeria%20pagina%20web/bar/licores/ballantones.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$150.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/chivas.jfif" alt="Chivas">
+                            <div class="card-overlay"><span class="card-tag">Whisky</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Chivas Regal</h3>
+                            <p>12 años</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Chivas - Media', 55000, 'galeria%20pagina%20web/bar/licores/chivas.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$55.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Chivas - Botella', 120000, 'galeria%20pagina%20web/bar/licores/chivas.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$120.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Chivas - Litro', 200000, 'galeria%20pagina%20web/bar/licores/chivas.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$200.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/buchamans.jfif" alt="Buchanan's">
+                            <div class="card-overlay"><span class="card-tag">Whisky</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Buchanan's</h3>
+                            <p>12 años</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Buchanans - Media', 60000, 'galeria%20pagina%20web/bar/licores/buchamans.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$60.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Buchanans - Botella', 130000, 'galeria%20pagina%20web/bar/licores/buchamans.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$130.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Buchanans - Litro', 220000, 'galeria%20pagina%20web/bar/licores/buchamans.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$220.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/ron%20medellin%20dorado.jfif" alt="Ron Medellín Dorado">
+                            <div class="card-overlay"><span class="card-tag">Ron</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ron Medellín Dorado</h3>
+                            <p>Ron colombiano</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Ron Medellin Dorado - Media', 22000, 'galeria%20pagina%20web/bar/licores/ron%20medellin%20dorado.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$22.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ron Medellin Dorado - Botella', 45000, 'galeria%20pagina%20web/bar/licores/ron%20medellin%20dorado.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$45.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ron Medellin Dorado - Litro', 78000, 'galeria%20pagina%20web/bar/licores/ron%20medellin%20dorado.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$78.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/ron%20medellin%203%20a%C3%B1os.jfif" alt="Ron Medellín 3 Años">
+                            <div class="card-overlay"><span class="card-tag">Ron</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ron Medellín 3 Años</h3>
+                            <p>Añejo</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Ron Medellin 3 Anos - Media', 25000, 'galeria%20pagina%20web/bar/licores/ron%20medellin%203%20a%C3%B1os.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$25.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ron Medellin 3 Anos - Botella', 50000, 'galeria%20pagina%20web/bar/licores/ron%20medellin%203%20a%C3%B1os.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$50.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ron Medellin 3 Anos - Litro', 85000, 'galeria%20pagina%20web/bar/licores/ron%20medellin%203%20a%C3%B1os.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$85.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/ron%20caldas.jfif" alt="Ron Caldas">
+                            <div class="card-overlay"><span class="card-tag">Ron</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ron Caldas</h3>
+                            <p>Ron tradicional</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Ron Caldas - Media', 20000, 'galeria%20pagina%20web/bar/licores/ron%20caldas.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$20.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ron Caldas - Botella', 40000, 'galeria%20pagina%20web/bar/licores/ron%20caldas.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$40.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ron Caldas - Litro', 70000, 'galeria%20pagina%20web/bar/licores/ron%20caldas.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$70.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/ron%20caldas%20azul.jfif" alt="Ron Caldas Azul">
+                            <div class="card-overlay"><span class="card-tag">Ron</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ron Caldas Azul</h3>
+                            <p>Premium</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Ron Caldas Azul - Media', 22000, 'galeria%20pagina%20web/bar/licores/ron%20caldas%20azul.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$22.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ron Caldas Azul - Botella', 45000, 'galeria%20pagina%20web/bar/licores/ron%20caldas%20azul.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$45.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Ron Caldas Azul - Litro', 78000, 'galeria%20pagina%20web/bar/licores/ron%20caldas%20azul.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$78.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/don%20julio.jfif" alt="Don Julio">
+                            <div class="card-overlay"><span class="card-tag">Tequila</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Don Julio</h3>
+                            <p>Tequila premium</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Don Julio - Media', 70000, 'galeria%20pagina%20web/bar/licores/don%20julio.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$70.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Don Julio - Botella', 150000, 'galeria%20pagina%20web/bar/licores/don%20julio.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$150.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Don Julio - Litro', 260000, 'galeria%20pagina%20web/bar/licores/don%20julio.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$260.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/jose%20cuervo.jfif" alt="José Cuervo">
+                            <div class="card-overlay"><span class="card-tag">Tequila</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>José Cuervo</h3>
+                            <p>Tequila clásico</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Jose Cuervo - Media', 45000, 'galeria%20pagina%20web/bar/licores/jose%20cuervo.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$45.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Jose Cuervo - Botella', 95000, 'galeria%20pagina%20web/bar/licores/jose%20cuervo.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$95.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Jose Cuervo - Litro', 165000, 'galeria%20pagina%20web/bar/licores/jose%20cuervo.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$165.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/licores/somethings%20especial.jfif" alt="Something's Special">
+                            <div class="card-overlay"><span class="card-tag">Tequila</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Something's Special</h3>
+                            <p>Tequila artesanal</p>
+                            <div class="presentaciones-dropdown">
+                                <button class="btn-presentaciones" onclick="togglePresentaciones(this)"><i class="fas fa-wine-bottle"></i> Ver Presentaciones <i class="fas fa-chevron-down"></i></button>
+                                <div class="presentaciones-list">
+                                    <div class="pres-item" onclick="addToReservation('Somethings Especial - Media', 50000, 'galeria%20pagina%20web/bar/licores/somethings%20especial.jfif')">
+                                        <span class="pres-tipo">Media (200ml)</span><span class="pres-precio">$50.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Somethings Especial - Botella', 110000, 'galeria%20pagina%20web/bar/licores/somethings%20especial.jfif')">
+                                        <span class="pres-tipo">Botella (375ml)</span><span class="pres-precio">$110.000</span>
+                                    </div>
+                                    <div class="pres-item" onclick="addToReservation('Somethings Especial - Litro', 190000, 'galeria%20pagina%20web/bar/licores/somethings%20especial.jfif')">
+                                        <span class="pres-tipo">Litro (750ml)</span><span class="pres-precio">$190.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-grid" id="vinos">
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/vinos/casillero%20del%20diablo.jfif" alt="Casillero del Diablo">
+                            <div class="card-overlay"><span class="card-tag">Tinto</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Casillero del Diablo</h3>
+                            <p>Vino tinto 750ml - Cabernet Sauvignon</p>
+                            <div class="card-footer">
+                                <div class="price">$55.000</div>
+                                <button class="btn-add" onclick="addToReservation('Casillero del Diablo', 55000, 'galeria%20pagina%20web/bar/vinos/casillero%20del%20diablo.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/vinos/frontera.jfif" alt="Frontera">
+                            <div class="card-overlay"><span class="card-tag">Tinto</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Frontera</h3>
+                            <p>Vino tinto 750ml - Cabernet Sauvignon</p>
+                            <div class="card-footer">
+                                <div class="price">$38.000</div>
+                                <button class="btn-add" onclick="addToReservation('Frontera', 38000, 'galeria%20pagina%20web/bar/vinos/frontera.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/vinos/gato%20negro.jfif" alt="Gato Negro">
+                            <div class="card-overlay"><span class="card-tag">Tinto</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Gato Negro</h3>
+                            <p>Vino tinto 750ml - Merlot</p>
+                            <div class="card-footer">
+                                <div class="price">$35.000</div>
+                                <button class="btn-add" onclick="addToReservation('Gato Negro', 35000, 'galeria%20pagina%20web/bar/vinos/gato%20negro.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/vinos/las%20moras.jfif" alt="Las Moras">
+                            <div class="card-overlay"><span class="card-tag">Tinto</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Las Moras</h3>
+                            <p>Vino tinto 750ml - Malbec</p>
+                            <div class="card-footer">
+                                <div class="price">$42.000</div>
+                                <button class="btn-add" onclick="addToReservation('Las Moras', 42000, 'galeria%20pagina%20web/bar/vinos/las%20moras.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="card-image">
+                            <img src="galeria%20pagina%20web/bar/vinos/vino%20rosado.jfif" alt="Vino Rosado">
+                            <div class="card-overlay"><span class="card-tag">Rosé</span></div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Vino Rosado</h3>
+                            <p>Vino rosé 750ml - Fresco y afrutado</p>
+                            <div class="card-footer">
+                                <div class="price">$38.000</div>
+                                <button class="btn-add" onclick="addToReservation('Vino Rosado', 38000, 'galeria%20pagina%20web/bar/vinos/vino%20rosado.jfif')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="mision" class="mision-section">
+        <div class="container">
+            <div class="mision-grid">
+                <div class="mision-card">
+                    <div class="mision-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Nuestra Misión</h3>
+                    <p>Ofrecer a nuestros clientes una experiencia auténtica y cercana de parrilla argentina, utilizando productos de calidad, técnicas tradicionales y una atención cálida que convierta cada comida en un momento especial para compartir.</p>
+                </div>
+                <div class="mision-card">
+                    <div class="mision-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Nuestra Visión</h3>
+                    <p>En cinco años, convertirnos en una de las parrillas de referencia de Medellín y desarrollar una marca gastronómica reconocida por la calidad de sus carnes, su servicio y su experiencia alrededor del fuego, con posibilidades de expansión a otras ciudades de Colombia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="valores" class="valores-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag"><i class="fas fa-heart"></i> Lo que nos define</span>
+                <h2 class="section-title">Valores de <span class="highlight">Marca</span></h2>
+                <p class="section-subtitle">Los pilares que guían cada decisión en El Parrillero Argentino</p>
+            </div>
+            <div class="valores-grid">
+                <div class="valor-card">
+                    <div class="valor-icon"><i class="fas fa-gem"></i></div>
+                    <h4>Calidad</h4>
+                    <p class="valor-desc">Cuidamos los ingredientes y cada preparación.</p>
+                    <p class="valor-reflejo"><i class="fas fa-arrow-right"></i> Selección cuidadosa de carnes y control de preparación.</p>
+                </div>
+                <div class="valor-card">
+                    <div class="valor-icon"><i class="fas fa-fire"></i></div>
+                    <h4>Pasión</h4>
+                    <p class="valor-desc">Ponemos entusiasmo en lo que hacemos.</p>
+                    <p class="valor-reflejo"><i class="fas fa-arrow-right"></i> El equipo transmite energía y orgullo por la parrilla.</p>
+                </div>
+                <div class="valor-card">
+                    <div class="valor-icon"><i class="fas fa-landmark"></i></div>
+                    <h4>Tradición</h4>
+                    <p class="valor-desc">Respetamos la cultura del asado argentino.</p>
+                    <p class="valor-reflejo"><i class="fas fa-arrow-right"></i> Técnicas de parrilla, chorizos, picadas y sabores tradicionales.</p>
+                </div>
+                <div class="valor-card">
+                    <div class="valor-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <h4>Hospitalidad</h4>
+                    <p class="valor-desc">Queremos que cada persona se sienta bienvenida.</p>
+                    <p class="valor-reflejo"><i class="fas fa-arrow-right"></i> Atención amable, cercana y personalizada.</p>
+                </div>
+                <div class="valor-card">
+                    <div class="valor-icon"><i class="fas fa-handshake"></i></div>
+                    <h4>Honestidad</h4>
+                    <p class="valor-desc">Comunicamos claramente lo que ofrecemos.</p>
+                    <p class="valor-reflejo"><i class="fas fa-arrow-right"></i> Precios, ingredientes y condiciones transparentes.</p>
+                </div>
+                <div class="valor-card">
+                    <div class="valor-icon"><i class="fas fa-utensils"></i></div>
+                    <h4>Sabor</h4>
+                    <p class="valor-desc">El sabor es el centro de nuestra propuesta.</p>
+                    <p class="valor-reflejo"><i class="fas fa-arrow-right"></i> Carnes preparadas al punto y acompañamientos equilibrados.</p>
+                </div>
+                <div class="valor-card">
+                    <div class="valor-icon"><i class="fas fa-users"></i></div>
+                    <h4>Trabajo en Equipo</h4>
+                    <p class="valor-desc">El resultado depende de todos.</p>
+                    <p class="valor-reflejo"><i class="fas fa-arrow-right"></i> Cocina, parrilla, servicio y administración trabajan coordinadamente.</p>
+                </div>
+                <div class="valor-card">
+                    <div class="valor-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h4>Innovación</h4>
+                    <p class="valor-desc">La tradición también puede evolucionar.</p>
+                    <p class="valor-reflejo"><i class="fas fa-arrow-right"></i> Incorporamos nuevas propuestas sin perder nuestra esencia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reservacion" class="reservation-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag"><i class="fas fa-calendar-check"></i> Reserva tu Mesa</span>
+                <h2 class="section-title">Reservaciones <span class="highlight">Online</span></h2>
+                <p class="section-subtitle">Reserva ahora o usa nuestro chatbot para más comodidad</p>
+            </div>
+
+            <div class="reservation-container">
+                <div class="reservation-form">
+                    <div class="form-header">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>Formulario de Reservación</h3>
+                    </div>
+                    <form id="bookingForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name"><i class="fas fa-user"></i> Nombre completo</label>
+                                <input type="text" id="name" name="name" required placeholder="Tu nombre completo">
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><i class="fas fa-envelope"></i> Correo electrónico</label>
+                                <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone"><i class="fas fa-phone"></i> Teléfono</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="300 555 0147">
+                            </div>
+                            <div class="form-group">
+                                <label for="guests"><i class="fas fa-users"></i> Número de personas</label>
+                                <select id="guests" name="guests" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="1">1 persona</option>
+                                    <option value="2">2 personas</option>
+                                    <option value="3">3 personas</option>
+                                    <option value="4">4 personas</option>
+                                    <option value="5">5 personas</option>
+                                    <option value="6">6 personas</option>
+                                    <option value="7">7 personas</option>
+                                    <option value="8">8 personas</option>
+                                    <option value="10">10+ personas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date"><i class="fas fa-calendar"></i> Fecha</label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="time"><i class="fas fa-clock"></i> Hora</label>
+                                <input type="time" id="time" name="time" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes"><i class="fas fa-comment"></i> Peticiones especiales</label>
+                            <textarea id="notes" name="notes" rows="3" placeholder="Alergias, celebraciones, preferencias..."></textarea>
+                        </div>
+
+                        <div id="selectedItems" class="selected-items" style="display:none;">
+                            <div class="selected-header">
+                                <i class="fas fa-shopping-cart"></i>
+                                <h4>Tu Pedido</h4>
+                            </div>
+                            <ul id="itemsList"></ul>
+                            <div class="total-container">
+                                <span>Total:</span>
+                                <p class="total">$<span id="totalPrice">0</span></p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-check-circle"></i> Confirmar Reservación
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag"><i class="fas fa-map-marker-alt"></i> Encuéntranos</span>
+                <h2 class="section-title">Contacto <span class="highlight">& Ubicación</span></h2>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Ubicación</h3>
+                    <p>Carrera 38 # 10-47, Local 102</p>
+                    <p>El Poblado, Medellín</p>
+                    <a href="#" class="contact-link">Cómo llegar <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3>Contacto</h3>
+                    <p>+57 300 555 0147</p>
+                    <p>hola@elparrilleroargentino.demo</p>
+                    <a href="https://wa.me/573005550147" target="_blank" class="contact-link">WhatsApp <i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div class="contact-details">
+                <div class="detail-item">
+                    <i class="fas fa-map-pin"></i>
+                    <div>
+                        <strong>Referencia</strong>
+                        <p>A dos cuadras de "Plaza del Fuego" y frente al "Centro Empresarial La Arboleda".</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-directions"></i>
+                    <div>
+                        <strong>Indicaciones</strong>
+                        <p>Desde la Avenida El Poblado, tomar la vía hacia el sector gastronómico de El Poblado y continuar hasta la zona comercial. El restaurante está ubicado en el primer nivel de un pequeño complejo comercial.</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-parking"></i>
+                    <div>
+                        <strong>Parqueadero</strong>
+                        <p>Sí. Parqueadero compartido del complejo comercial, sujeto a disponibilidad.</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-shopping-bag"></i>
+                    <div>
+                        <strong>Recogida de pedidos</strong>
+                        <p>Sí. Los clientes pueden solicitar pedidos para recoger directamente en el restaurante.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="schedule-container">
+                <h3 class="schedule-title"><i class="fas fa-clock"></i> Horarios de Atención</h3>
+                <div class="schedule-table-wrapper">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Día</th>
+                                <th><i class="fas fa-utensils"></i> Restaurante</th>
+                                <th><i class="fas fa-shopping-bag"></i> Recogida</th>
+                                <th><i class="fas fa-motorcycle"></i> Domicilios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="day-name">Lunes</span></td>
+                                <td>12:00 p. m. – 9:30 p. m.</td>
+                                <td>12:00 p. m. – 9:00 p. m.</td>
+                                <td>12:00 p. m. – 9:00 p. m.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="day-name">Martes</span></td>
+                                <td>12:00 p. m. – 9:30 p. m.</td>
+                                <td>12:00 p. m. – 9:00 p. m.</td>
+                                <td>12:00 p. m. – 9:00 p. m.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="day-name">Miércoles</span></td>
+                                <td>12:00 p. m. – 9:30 p. m.</td>
+                                <td>12:00 p. m. – 9:00 p. m.</td>
+                                <td>12:00 p. m. – 9:00 p. m.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="day-name">Jueves</span></td>
+                                <td>12:00 p. m. – 10:00 p. m.</td>
+                                <td>12:00 p. m. – 9:30 p. m.</td>
+                                <td>12:00 p. m. – 9:30 p. m.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="day-name">Viernes</span></td>
+                                <td>12:00 p. m. – 11:00 p. m.</td>
+                                <td>12:00 p. m. – 10:30 p. m.</td>
+                                <td>12:00 p. m. – 10:30 p. m.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="day-name">Sábado</span></td>
+                                <td>12:00 p. m. – 11:00 p. m.</td>
+                                <td>12:00 p. m. – 10:30 p. m.</td>
+                                <td>12:00 p. m. – 10:30 p. m.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="day-name">Domingo</span></td>
+                                <td>12:00 p. m. – 8:30 p. m.</td>
+                                <td>12:00 p. m. – 8:00 p. m.</td>
+                                <td>12:00 p. m. – 8:00 p. m.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="politicas" class="politicas-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag"><i class="fas fa-book-open"></i> Conócelas</span>
+                <h2 class="section-title">Políticas del <span class="highlight">Restaurante</span></h2>
+                <p class="section-subtitle">Normas y condiciones para garantizar la mejor experiencia</p>
+            </div>
+            <div class="politicas-grid">
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-calendar-check"></i></div>
+                    <h4>Reservas</h4>
+                    <p>Las reservas están sujetas a disponibilidad. Se recomienda reservar con anticipación, especialmente viernes, sábados y fechas especiales.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-times-circle"></i></div>
+                    <h4>Cancelaciones</h4>
+                    <p>Las cancelaciones deben realizarse con al menos 2 horas de anticipación siempre que sea posible.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <h4>Cambios en Pedidos</h4>
+                    <p>Los cambios pueden solicitarse mientras el pedido no haya comenzado a prepararse. Una vez iniciada la preparación, no siempre será posible modificarlo.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-undo"></i></div>
+                    <h4>Devoluciones</h4>
+                    <p>Si existe un problema comprobable con el producto, el restaurante analizará el caso y podrá ofrecer reposición, solución equivalente o devolución, según corresponda.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-headset"></i></div>
+                    <h4>Reclamos</h4>
+                    <p>Los clientes pueden presentar sus reclamos por WhatsApp, teléfono o directamente en el restaurante. El equipo debe responder de manera cordial y buscar una solución.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-ban"></i></div>
+                    <h4>Productos Agotados</h4>
+                    <p>Cuando un producto se agote, el cliente será informado antes de confirmar el pedido. Se podrá ofrecer una alternativa.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <h4>Demoras</h4>
+                    <p>Si existe una demora significativa, el restaurante procurará informar al cliente y proporcionar un nuevo tiempo estimado.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-paw"></i></div>
+                    <h4>Mascotas</h4>
+                    <p>Se permiten mascotas en las zonas exteriores habilitadas, siempre que permanezcan bajo control de sus propietarios y no interfieran con otros clientes.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-child"></i></div>
+                    <h4>Niños</h4>
+                    <p>El restaurante es apto para familias y recibe niños. Los menores deben permanecer bajo supervisión de sus acompañantes.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-search"></i></div>
+                    <h4>Objetos Olvidados</h4>
+                    <p>Los objetos encontrados serán entregados al personal administrativo y permanecerán bajo custodia durante un período razonable. Para reclamarlos, el cliente deberá proporcionar una descripción que permita identificarlos.</p>
+                </div>
+                <div class="politica-card">
+                    <div class="politica-icon"><i class="fas fa-file-invoice"></i></div>
+                    <h4>Facturación</h4>
+                    <p>Los clientes pueden solicitar factura. Para ello deberán proporcionar los datos necesarios para la facturación antes de finalizar el proceso correspondiente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="parrillero argentino.jpg" alt="El Parrillero Argentino"
+class="footer-logo-img">
+                <span>Parrillero <span class="highlight">Argentino</span></span>
+            </div>
+            <div class="footer-social">
+                <a href="https://facebook.com/ElParrilleroArgentinoDemo" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://instagram.com/elparrilleroargentino.demo" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/573005550147" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="footer-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#menu">Menú</a>
+                <a href="#reservacion">Reservaciones</a>
+                <a href="#contacto">Contacto</a>
+                <a href="#politicas">Políticas</a>
+                <a href="https://www.elparrilleroargentino.demo" target="_blank">Sitio Web</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Parrillero Argentino - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <div class="cart-header-left">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Mi Pedido</h3>
+            </div>
+            <button class="cart-close" onclick="toggleCartSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-body" id="cartBody">
+            <div class="cart-empty" id="cartEmpty">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Tu carrito está vacío</p>
+                <span>Agrega platos del menú para comenzar</span>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display:none;">
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal">$0</span>
+                </div>
+                <div class="summary-row">
+                    <span>IVA (19%)</span>
+                    <span id="cartIVA">$0</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="cartTotal">$0</span>
+                </div>
+            </div>
+            <button class="btn-checkout" onclick="openCheckout()">
+                <i class="fas fa-credit-card"></i> Proceder al Pago
+            </button>
+        </div>
+    </div>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCartSidebar()"></div>
+
+    <div class="checkout-modal" id="checkoutModal">
+        <div class="checkout-overlay" onclick="closeCheckout()"></div>
+        <div class="checkout-content">
+            <button class="checkout-close" onclick="closeCheckout()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="checkout-steps">
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <span>Datos</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <span>Pago</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <span>Factura</span>
+                </div>
+            </div>
+
+            <div class="checkout-panel active" id="panel1">
+                <h3><i class="fas fa-user"></i> Tus Datos</h3>
+                <form id="checkoutForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre completo</label>
+                            <input type="text" id="checkoutName" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cédula/NIT</label>
+                            <input type="text" id="checkoutCedula" placeholder="1234567890" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Correo electrónico</label>
+                            <input type="email" id="checkoutEmail" placeholder="tu@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="tel" id="checkoutPhone" placeholder="300 555 0147" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección de entrega</label>
+                        <input type="text" id="checkoutAddress" placeholder="Calle 123 #45-67, Barrio" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Notas adicionales</label>
+                        <textarea id="checkoutNotes" rows="2" placeholder="Instrucciones de entrega..."></textarea>
+                    </div>
+                    <button type="button" class="btn-next" onclick="goToStep(2)">
+                        Continuar <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="checkout-panel" id="panel2">
+                <h3><i class="fas fa-credit-card"></i> Forma de Pago</h3>
+                <div class="payment-methods">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="efectivo" checked>
+                        <div class="payment-card">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Efectivo</span>
+                            <small>Pago contra entrega</small>
+                        </div>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="tarjeta">
+                        <div class="payment-card">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Tarjeta</span>
+                            <small>Crédito o Débito</small>
+                        </div>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="nequi">
+                        <div class="payment-card">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Nequi</span>
+                            <small>Transferencia instantánea</small>
+                        </div>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="daviplata">
+                        <div class="payment-card">
+                            <i class="fas fa-wallet"></i>
+                            <span>Daviplata</span>
+                            <small>Billetera digital</small>
+                        </div>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="transferencia">
+                        <div class="payment-card">
+                            <i class="fas fa-university"></i>
+                            <span>Transferencia</span>
+                            <small>Débito bancario</small>
+                        </div>
+                    </label>
+                </div>
+                <div class="payment-details" id="paymentDetails">
+                    <div class="detail-box">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Paga en efectivo contra entrega en tu dirección</p>
+                    </div>
+                </div>
+                <div class="checkout-buttons">
+                    <button type="button" class="btn-back" onclick="goToStep(1)">
+                        <i class="fas fa-arrow-left"></i> Atrás
+                    </button>
+                    <button type="button" class="btn-next" onclick="goToStep(3)">
+                        Generar Factura <i class="fas fa-file-invoice"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="checkout-panel" id="panel3">
+                <div class="invoice-preview" id="invoicePreview">
+                    <div class="invoice-header">
+                        <div class="invoice-logo">
+                            <img src="parrillero argentino.jpg"
+alt="El Parrillero Argentino">
+                            <span>Parrillero Argentino</span>
+                        </div>
+                        <div class="invoice-info">
+                            <h4>FACTURA DE VENTA</h4>
+                            <p><strong>No.</strong> <span id="invoiceNumber">0001</span></p>
+                            <p><strong>Fecha:</strong> <span id="invoiceDate"></span></p>
+                        </div>
+                    </div>
+                    <div class="invoice-client">
+                        <p><strong>Cliente:</strong> <span id="invClient"></span></p>
+                        <p><strong>Cédula:</strong> <span id="invCedula"></span></p>
+                        <p><strong>Dirección:</strong> <span id="invAddress"></span></p>
+                        <p><strong>Email:</strong> <span id="invEmail"></span></p>
+                    </div>
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Cant.</th>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceItems"></tbody>
+                    </table>
+                    <div class="invoice-totals">
+                        <div class="inv-row">
+                            <span>Subtotal:</span>
+                            <span id="invSubtotal"></span>
+                        </div>
+                        <div class="inv-row">
+                            <span>IVA (19%):</span>
+                            <span id="invIVA"></span>
+                        </div>
+                        <div class="inv-row total">
+                            <span>TOTAL:</span>
+                            <span id="invTotal"></span>
+                        </div>
+                    </div>
+                    <div class="invoice-payment">
+                        <p><strong>Forma de pago:</strong> <span id="invPayment"></span></p>
+                    </div>
+                    <div class="invoice-footer">
+                        <p>¡Gracias por tu compra en Parrillero Argentino!</p>
+                        <p>La factura será enviada a tu correo electrónico</p>
+                    </div>
+                </div>
+                <div class="email-send">
+                    <div class="email-input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="sendEmail" placeholder="Correo para enviar factura">
+                    </div>
+                    <button class="btn-send-invoice" onclick="sendInvoice()">
+                        <i class="fas fa-paper-plane"></i> Enviar Factura
+                    </button>
+                </div>
+                <div class="checkout-buttons">
+                    <button type="button" class="btn-back" onclick="goToStep(2)">
+                        <i class="fas fa-arrow-left"></i> Atrás
+                    </button>
+                    <button type="button" class="btn-confirm" onclick="confirmOrder()">
+                        <i class="fas fa-check-circle"></i> Confirmar Pedido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-float" id="cartFloat" onclick="toggleCartSidebar()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <div class="confirmation-modal" id="confirmationModal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>¡Reservación Confirmada!</h3>
+            <p id="confirmationDetails"></p>
+            <div class="modal-actions">
+                <button class="btn-modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="image-modal" id="imageModal">
+        <div class="modal-overlay" onclick="closeImageModal()"></div>
+        <div class="image-modal-content">
+            <button class="image-modal-close" onclick="closeImageModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="modalImage" src="" alt="Vista ampliada">
+        </div>
+    </div>
+
+    <button class="admin-toggle" onclick="toggleAdmin()">
+        <i class="fas fa-cog"></i>
+    </button>
+
+    <div class="login-modal" id="loginModal">
+        <div class="login-overlay" onclick="closeLogin()"></div>
+        <div class="login-content">
+            <button class="login-close" onclick="closeLogin()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="login-header">
+                <img src="parrillero argentino.jpg" alt="El Parrillero Argentino"
+class="login-logo">
+                <h2>Parrillero Argentino</h2>
+                <p>Sistema de Administración</p>
+            </div>
+
+            <div class="login-tabs">
+                <button class="login-tab active" onclick="switchLoginTab('login')">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+                <button class="login-tab" onclick="switchLoginTab('register')">
+                    <i class="fas fa-user-plus"></i> Registrarse
+                </button>
+            </div>
+
+            <div class="login-panel active" id="loginPanel">
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="login-field">
+                        <label><i class="fas fa-id-card"></i> Documento de Identidad</label>
+                        <input type="text" id="loginDoc" placeholder="Tu cédula o documento" required>
+                    </div>
+                    <div class="login-field">
+                        <label><i class="fas fa-lock"></i> Contraseña</label>
+                        <div class="password-input">
+                            <input type="password" id="loginPass" placeholder="Tu contraseña" required>
+                            <button type="button" class="toggle-pass" onclick="togglePassword('loginPass')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </button>
+                    <div class="login-error" id="loginError"></div>
+                </form>
+                <div class="demo-credentials">
+                    <p><strong>Credenciales de demostración:</strong></p>
+                    <span>Admin: <strong>1000</strong> / <strong>admin123</strong></span>
+                </div>
+            </div>
+
+            <div class="login-panel" id="registerPanel">
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="register-role">
+                        <label>Tipo de cuenta:</label>
+                        <div class="role-options">
+                            <label class="role-option">
+                                <input type="radio" name="role" value="empleado" checked>
+                                <div class="role-card">
+                                    <i class="fas fa-user-tie"></i>
+                                    <span>Empleado</span>
+                                </div>
+                            </label>
+                            <label class="role-option">
+                                <input type="radio" name="role" value="admin">
+                                <div class="role-card">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>Administrador</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="login-field">
+                        <label><i class="fas fa-user"></i> Nombre completo</label>
+                        <input type="text" id="regName" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="login-field">
+                        <label><i class="fas fa-id-card"></i> Documento de Identidad</label>
+                        <input type="text" id="regDoc" placeholder="Tu cédula o documento" required>
+                    </div>
+                    <div class="login-field">
+                        <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+                        <input type="email" id="regEmail" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="login-field">
+                        <label><i class="fas fa-phone"></i> Teléfono</label>
+                        <input type="tel" id="regPhone" placeholder="300 555 0147" required>
+                    </div>
+                    <div class="login-field">
+                        <label><i class="fas fa-lock"></i> Contraseña</label>
+                        <div class="password-input">
+                            <input type="password" id="regPass" placeholder="Crear contraseña" required>
+                            <button type="button" class="toggle-pass" onclick="togglePassword('regPass')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="login-field">
+                        <label><i class="fas fa-lock"></i> Confirmar contraseña</label>
+                        <div class="password-input">
+                            <input type="password" id="regPassConfirm" placeholder="Repetir contraseña" required>
+                            <button type="button" class="toggle-pass" onclick="togglePassword('regPassConfirm')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-register">
+                        <i class="fas fa-user-plus"></i> Crear Cuenta
+                    </button>
+                    <div class="login-error" id="registerError"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-overlay" onclick="closeAdmin()"></div>
+        <div class="admin-content">
+            <button class="admin-close" onclick="closeAdmin()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="admin-header">
+                <i class="fas fa-cog"></i>
+                <h2>Panel de Administración</h2>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchAdminTab('clientes')">
+                    <i class="fas fa-users"></i> Clientes
+                </button>
+                <button class="admin-tab" onclick="switchAdminTab('reservas')">
+                    <i class="fas fa-calendar-check"></i> Reservas
+                </button>
+                <button class="admin-tab" onclick="switchAdminTab('pedidos')">
+                    <i class="fas fa-shopping-bag"></i> Pedidos
+                </button>
+                <button class="admin-tab" onclick="switchAdminTab('menu')">
+                    <i class="fas fa-utensils"></i> Menú
+                </button>
+                <button class="admin-tab" onclick="switchAdminTab('ofertas')">
+                    <i class="fas fa-tags"></i> Ofertas
+                </button>
+                <button class="admin-tab" onclick="switchAdminTab('enviar')">
+                    <i class="fas fa-envelope"></i> Enviar Ofertas
+                </button>
+            </div>
+
+            <div class="admin-panel active" id="adminClientes">
+                <div class="admin-panel-header">
+                    <h3><i class="fas fa-database"></i> Base de Datos de Clientes</h3>
+                    <div class="admin-actions">
+                        <button class="btn-export" onclick="exportToExcel()">
+                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        </button>
+                        <button class="btn-clear" onclick="clearClients()">
+                            <i class="fas fa-trash"></i> Limpiar
+                        </button>
+                    </div>
+                </div>
+                <div class="clients-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <span id="totalClients">0</span>
+                        <small>Clientes</small>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="totalOrders">0</span>
+                        <small>Pedidos</small>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span id="totalRevenue">$0</span>
+                        <small>Ingresos</small>
+                    </div>
+                </div>
+                <div class="clients-table-container">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cédula</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>Total</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientsTableBody">
+                            <tr class="empty-row">
+                                <td colspan="7">No hay clientes registrados aún</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-panel" id="adminReservas">
+                <div class="admin-panel-header">
+                    <h3><i class="fas fa-calendar-check"></i> Reservas</h3>
+                    <div class="admin-actions">
+                        <select id="reservaFilter" onchange="filterReservas()" class="admin-filter-select">
+                            <option value="all">Todas</option>
+                            <option value="Pendiente">Pendientes</option>
+                            <option value="Confirmada">Confirmadas</option>
+                            <option value="Cancelada">Canceladas</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-stats-row">
+                    <div class="stat-card"><i class="fas fa-calendar"></i><span id="totalReservas">0</span><small>Total</small></div>
+                    <div class="stat-card"><i class="fas fa-clock"></i><span id="reservasPendientes">0</span><small>Pendientes</small></div>
+                    <div class="stat-card"><i class="fas fa-check-circle"></i><span id="reservasConfirmadas">0</span><small>Confirmadas</small></div>
+                    <div class="stat-card"><i class="fas fa-times-circle"></i><span id="reservasCanceladas">0</span><small>Canceladas</small></div>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="reservaSearch" placeholder="Buscar por nombre, teléfono..." oninput="filterReservas()">
+                </div>
+                <div class="clients-table-container">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Teléfono</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Personas</th>
+                                <th>Ubicación</th>
+                                <th>Ocasión</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservasTableBody">
+                            <tr class="empty-row"><td colspan="9">No hay reservas registradas</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-panel" id="adminPedidos">
+                <div class="admin-panel-header">
+                    <h3><i class="fas fa-shopping-bag"></i> Pedidos</h3>
+                    <div class="admin-actions">
+                        <select id="pedidoFilter" onchange="filterPedidos()" class="admin-filter-select">
+                            <option value="all">Todos</option>
+                            <option value="Pendiente">Pendientes</option>
+                            <option value="Confirmada">Confirmados</option>
+                            <option value="Cancelada">Cancelados</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-stats-row">
+                    <div class="stat-card"><i class="fas fa-shopping-bag"></i><span id="totalPedidos">0</span><small>Total</small></div>
+                    <div class="stat-card"><i class="fas fa-home"></i><span id="pedidosDomicilio">0</span><small>Domicilio</small></div>
+                    <div class="stat-card"><i class="fas fa-store"></i><span id="pedidosRecogida">0</span><small>Recogida</small></div>
+                    <div class="stat-card"><i class="fas fa-money-bill"></i><span id="pedidosPendientes">0</span><small>Pendientes</small></div>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="pedidoSearch" placeholder="Buscar por nombre, producto..." oninput="filterPedidos()">
+                </div>
+                <div class="clients-table-container">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Teléfono</th>
+                                <th>Modo</th>
+                                <th>Productos</th>
+                                <th>Método Pago</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidosTableBody">
+                            <tr class="empty-row"><td colspan="8">No hay pedidos registrados</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-panel" id="adminMenu">
+                <div class="admin-panel-header">
+                    <h3><i class="fas fa-utensils"></i> Menú del Restaurante</h3>
+                </div>
+                <div class="admin-stats-row">
+                    <div class="stat-card"><i class="fas fa-utensils"></i><span id="totalPlatos">0</span><small>Platos</small></div>
+                    <div class="stat-card"><i class="fas fa-fire"></i><span id="platosParrilla">0</span><small>Parrilla</small></div>
+                    <div class="stat-card"><i class="fas fa-seedling"></i><span id="platosEntradas">0</span><small>Entradas</small></div>
+                    <div class="stat-card"><i class="fas fa-wine-glass"></i><span id="platosBebidas">0</span><small>Bebidas</small></div>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="menuSearch" placeholder="Buscar plato..." oninput="filterMenu()">
+                </div>
+                <div class="clients-table-container">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Plato</th>
+                                <th>Precio</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="menuTableBody">
+                            <tr class="empty-row"><td colspan="4">No hay platos en el menú</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-panel" id="adminOfertas">
+                <div class="admin-panel-header">
+                    <h3><i class="fas fa-tags"></i> Gestionar Ofertas</h3>
+                    <button class="btn-add-offer" onclick="showAddOfferForm()">
+                        <i class="fas fa-plus"></i> Nueva Oferta
+                    </button>
+                </div>
+                
+                <div class="offer-form" id="offerForm" style="display:none;">
+                    <div class="form-group">
+                        <label>Título de la Oferta</label>
+                        <input type="text" id="offerTitle" placeholder="Ej: 2x1 en Churrasco">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="offerDesc" rows="2" placeholder="Describe la oferta..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Oferta</label>
+                        <div class="offer-type-toggle">
+                            <button type="button" class="offer-type-btn active" id="btnConDescuento" onclick="setOfferType('descuento')">
+                                <i class="fas fa-percent"></i> Con Descuento
+                            </button>
+                            <button type="button" class="offer-type-btn" id="btnSinDescuento" onclick="setOfferType('sin_descuento')">
+                                <i class="fas fa-tag"></i> Sin Descuento
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group" id="discountGroup">
+                        <label>Descuento (%)</label>
+                        <input type="number" id="offerDiscount" placeholder="20" min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de expiración</label>
+                        <input type="date" id="offerExpiry">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen de la oferta</label>
+                        <div class="image-upload">
+                            <input type="file" id="offerImage" accept="image/*" onchange="previewOfferImage(event)">
+                            <div class="upload-preview" id="uploadPreview">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Seleccionar imagen</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="offer-form-buttons">
+                        <button class="btn-save-offer" onclick="saveOffer()">
+                            <i class="fas fa-save"></i> Guardar Oferta
+                        </button>
+                        <button class="btn-cancel-offer" onclick="hideOfferForm()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="offers-grid" id="offersGrid">
+                    <div class="empty-offers">
+                        <i class="fas fa-tag"></i>
+                        <p>No hay ofertas creadas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-panel" id="adminEnviar">
+                <div class="admin-panel-header">
+                    <h3><i class="fas fa-paper-plane"></i> Enviar Ofertas por Correo</h3>
+                </div>
+                
+                <div class="send-offer-section">
+                    <div class="form-group">
+                        <label>Seleccionar Oferta</label>
+                        <select id="selectOffer">
+                            <option value="">Seleccionar oferta...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="recipient-options">
+                        <label class="radio-option">
+                            <input type="radio" name="recipients" value="all" checked>
+                            <span><i class="fas fa-users"></i> Todos los clientes</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="recipients" value="selected">
+                            <span><i class="fas fa-check-square"></i> Seleccionar clientes</span>
+                        </label>
+                    </div>
+
+                    <div class="selected-clients" id="selectedClients" style="display:none;">
+                        <div class="select-actions">
+                            <button onclick="selectAllClients()">Seleccionar todos</button>
+                            <button onclick="deselectAllClients()">Deseleccionar</button>
+                        </div>
+                        <div class="clients-checkboxes" id="clientsCheckboxes"></div>
+                    </div>
+
+                    <div class="email-preview" id="emailPreview" style="display:none;">
+                        <h4><i class="fas fa-eye"></i> Vista Previa del Correo</h4>
+                        <div class="preview-email-content" id="previewEmailContent"></div>
+                    </div>
+
+                    <button class="btn-send-offers" onclick="sendOffersToClients()">
+                        <i class="fas fa-paper-plane"></i> Enviar Ofertas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <a href="https://wa.me/573005550147?text=Hola%2C%20quiero%20hacer%20un%20pedido" target="_blank" id="whatsappBtn">
+        <div class="whatsapp-float">
+            <i class="fab fa-whatsapp"></i>
+            <span class="whatsapp-tooltip">¡Escríbenos!</span>
+        </div>
+    </a>
 </body>
 </html>
