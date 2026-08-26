@@ -1350,11 +1350,14 @@ function sendOffersToClients() {
     const recipients = document.querySelector('input[name="recipients"]:checked').value;
     
     let targetEmails = [];
+    let targetNames = [];
     if (recipients === 'all') {
         targetEmails = clients.map(c => c.email);
+        targetNames = clients.map(c => c.name);
     } else {
         const checkboxes = document.querySelectorAll('#clientsCheckboxes input[type="checkbox"]:checked');
         targetEmails = Array.from(checkboxes).map(cb => clients[parseInt(cb.value)].email);
+        targetNames = Array.from(checkboxes).map(cb => clients[parseInt(cb.value)].name);
     }
     
     if (targetEmails.length === 0) {
@@ -1365,25 +1368,48 @@ function sendOffersToClients() {
     const btn = document.querySelector('.btn-send-offers');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     btn.disabled = true;
-    
-    setTimeout(() => {
-        btn.innerHTML = `<i class="fas fa-check"></i> ¡Enviado a ${targetEmails.length} clientes!`;
+
+    const payload = {
+        tipo: 'oferta',
+        timestamp: new Date().toISOString(),
+        oferta: {
+            titulo: offer.title,
+            descripcion: offer.description,
+            descuento: offer.discount + '%',
+            tipo: offer.type,
+            vencimiento: offer.expiry,
+            imagen: offer.image || null
+        },
+        destinatarios: targetEmails.map((email, i) => ({
+            email: email,
+            nombre: targetNames[i] || ''
+        }))
+    };
+
+    fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado a ' + targetEmails.length + ' clientes!';
         btn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
-        
-        showNotification(`Oferta "${offer.title}" enviada a ${targetEmails.length} clientes`);
-        
-        console.log('=== OFERTA ENVIADA ===');
-        console.log('Oferta:', offer.title);
-        console.log('Descuento:', offer.discount + '%');
-        console.log('Destinatarios:', targetEmails);
-        console.log('====================');
-        
+        showNotification('Oferta "' + offer.title + '" enviada a ' + targetEmails.length + ' clientes');
+    })
+    .catch(err => {
+        console.error('❌ Error enviando ofertas:', err);
+        btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error al enviar';
+        btn.style.background = '#dc3545';
+        showNotification('Error al enviar ofertas. Verifica la conexión con n8n.');
+    })
+    .finally(() => {
         setTimeout(() => {
             btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Ofertas';
             btn.style.background = '';
             btn.disabled = false;
         }, 3000);
-    }, 2500);
+    });
 }
 
 // ============ CHATBOT ESTILO WHATSAPP ============
