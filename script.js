@@ -1385,3 +1385,152 @@ function sendOffersToClients() {
         }, 3000);
     }, 2500);
 }
+
+// ============ CHATBOT ESTILO WHATSAPP (n8n) ============
+let chatSessionId = localStorage.getItem('parrillaChatSession');
+if (!chatSessionId) {
+    chatSessionId = 'web-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8);
+    localStorage.setItem('parrillaChatSession', chatSessionId);
+}
+
+const CHAT_FALLBACKS = [
+    'Gracias por tu mensaje. En un momento un asesor te responderá. 🙌',
+    '¡Recibido! Si prefieres atención inmediata escríbenos al WhatsApp +57 300 555 0147.',
+    'Estoy teniendo problemas para conectar en este momento. Inténtalo de nuevo en unos segundos.'
+];
+
+function toggleChat() {
+    const widget = document.getElementById('chatWidget');
+    const badge = document.getElementById('chatBadge');
+    const isOpen = widget.classList.toggle('open');
+
+    if (isOpen) {
+        if (badge) badge.style.display = 'none';
+        setTimeout(() => document.getElementById('chatInput')?.focus(), 300);
+    }
+}
+
+function minimizeChat(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('chatWidget').classList.remove('open');
+}
+
+function getNowTime() {
+    return new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
+function appendMessage(text, direction, withCheck = false) {
+    const body = document.getElementById('chatBody');
+    const div = document.createElement('div');
+    div.className = `msg msg-${direction}`;
+    const time = getNowTime();
+    const checks = withCheck ? '<i class="fas fa-check-double"></i>' : '';
+    div.innerHTML = `<div class="msg-bubble">${escapeHtml(text)}<span class="msg-time">${time} ${checks}</span></div>`;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+    return div;
+}
+
+function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = String(str ?? '');
+    return d.innerHTML.replace(/\n/g, '<br>');
+}
+
+function showTyping(show) {
+    const t = document.getElementById('chatTyping');
+    if (t) t.style.display = show ? 'flex' : 'none';
+    if (show) {
+        const body = document.getElementById('chatBody');
+        body.scrollTop = body.scrollHeight;
+    }
+}
+
+async function sendToN8nChat(mensaje) {
+    const payload = {
+        tipo: 'chat',
+        mensaje,
+        nombre: currentUser?.name || 'Visitante Web',
+        sessionId: chatSessionId,
+        origen: 'chatbot-web',
+        timestamp: new Date().toISOString()
+    };
+
+    try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 30000);
+
+        const response = await fetch(N8N_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+        });
+        clearTimeout(timeout);
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const text = await response.text();
+        if (!text || !text.trim()) throw new Error('respuesta vacía');
+
+        let data;
+        try { data = JSON.parse(text); } catch { return text.trim(); }
+
+        if (typeof data === 'string') return data;
+        const reply = data.reply || data.output || data.respuesta || data.message || data.text
+            || (Array.isArray(data) && (data[0]?.reply || data[0]?.output || data[0]?.respuesta));
+        if (reply) return String(reply);
+
+        throw new Error('sin campo de respuesta');
+    } catch (err) {
+        console.warn('⚠️ n8n chat:', err.message);
+        return CHAT_FALLBACKS[Math.floor(Math.random() * CHAT_FALLBACKS.length)];
+    }
+}
+
+let chatBusy = false;
+
+async function sendChatMessage() {
+    if (chatBusy) return;
+    const input = document.getElementById('chatInput');
+    const mensaje = input.value.trim();
+    if (!mensaje) return;
+
+    input.value = '';
+    appendMessage(mensaje, 'out', true);
+    hideQuickReplies();
+
+    chatBusy = true;
+    showTyping(true);
+
+    const reply = await sendToN8nChat(mensaje);
+
+    showTyping(false);
+    appendMessage(reply, 'in');
+    chatBusy = false;
+    document.getElementById('chatInput').focus();
+}
+
+function sendQuickReply(texto) {
+    const input = document.getElementById('chatInput');
+    input.value = texto;
+    sendChatMessage();
+}
+
+function hideQuickReplies() {
+    const qr = document.getElementById('quickReplies');
+    if (qr) qr.style.display = 'none';
+}
+
+// Badge de notificación al cargar
+document.addEventListener('DOMContentLoaded', () => {
+    const widget = document.getElementById('chatWidget');
+    if (!widget) return;
+
+    setTimeout(() => {
+        const badge = document.getElementById('chatBadge');
+        if (badge && !widget.classList.contains('open')) {
+            badge.textContent = '1';
+        }
+    }, 4000);
+});

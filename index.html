@@ -2377,5 +2377,57 @@ class="login-logo">
     </div>
 
     <script src="script.js"></script>
+
+    <!-- ============ CHATBOT ESTILO WHATSAPP ============ -->
+    <button id="chatToggle" onclick="toggleChat()" aria-label="Abrir chat">
+        <i class="fab fa-whatsapp" id="chatToggleIcon"></i>
+        <span class="chat-badge" id="chatBadge">1</span>
+    </button>
+
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">
+            <div class="chat-header-avatar">
+                <img src="parrillero argentino.jpg" alt="Parrillero" onerror="this.style.display='none'">
+                <i class="fas fa-fire" style="display:none;"></i>
+            </div>
+            <div class="chat-header-info">
+                <strong>El Parrillero</strong>
+                <span><span class="online-dot"></span> en línea</span>
+            </div>
+            <div class="chat-header-actions">
+                <button onclick="minimizeChat(event)" title="Minimizar"><i class="fas fa-minus"></i></button>
+                <button onclick="toggleChat()" title="Cerrar"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+            <div class="chat-date">HOY</div>
+            <div class="msg msg-in">
+                <div class="msg-bubble">
+                    ¡Hola! 👋 Bienvenido a <b>El Parrillero Argentino</b>.
+                    ¿En qué te puedo ayudar hoy?
+                    <span class="msg-time">12:00 <i class="fas fa-check-double"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-typing" id="chatTyping" style="display:none;">
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="quick-replies" id="quickReplies">
+            <button onclick="sendQuickReply('Ver el menú 📋')">Ver el menú 📋</button>
+            <button onclick="sendQuickReply('Hacer una reserva 🗓️')">Reservar 🗓️</button>
+            <button onclick="sendQuickReply('Horarios ⏰')">Horarios ⏰</button>
+            <button onclick="sendQuickReply('Ubicación 📍')">Ubicación 📍</button>
+        </div>
+
+        <div class="chat-input-bar">
+            <input type="text" id="chatInput" placeholder="Escribe un mensaje" onkeydown="if(event.key==='Enter') sendChatMessage()">
+            <button class="chat-send" onclick="sendChatMessage()" aria-label="Enviar">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 </body>
 </html>
