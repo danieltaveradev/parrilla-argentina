@@ -1533,10 +1533,10 @@ async function sendToBotpress(mensaje) {
         showTyping(true);
         const sess = await getBotpressSession();
 
-        const res = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
+        const res = await fetch(`${bpApiUrl()}/messages`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-user-key': sess.userKey },
-            body: JSON.stringify({ payload: { type: 'text', text: mensaje } })
+            body: JSON.stringify({ payload: { type: 'text', text: mensaje }, conversationId: sess.conversationId })
         });
         if (!res.ok) throw new Error(`message HTTP ${res.status}`);
         const { message } = await res.json();
@@ -1615,11 +1615,10 @@ async function sendChatMessage() {
         return;
     }
 
-    const bpReply = await sendToBotpress(mensaje);
-    if (!bpReply) {
+    const bpResult = await sendToBotpress(mensaje);
+    if (bpResult === null) {
+        showTyping(false);
         appendMessage(CHAT_FALLBACKS[Math.floor(Math.random() * CHAT_FALLBACKS.length)], 'in');
-    } else if (bpReply !== '') {
-        appendMessage(bpReply, 'in');
     }
     chatBusy = false;
     document.getElementById('chatInput').focus();
