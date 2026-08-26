@@ -1391,7 +1391,7 @@ function sendOffersToClients() {
 // n8n NO recibe chats: queda solo para reservas/pedidos (Sheets/Gmail).
 //
 // 1) Pega aquí el webhookId que genera Botpress Studio al activar la integración "Chat":
-const BOTPRESS_WEBHOOK_ID_CODIGO = '';
+const BOTPRESS_WEBHOOK_ID_CODIGO = '3e1c0a27-b42e-479f-9a3a-34e6db4313f4';
 //
 // 2) O configúralo sin editar código (consola del navegador):
 //    localStorage.setItem('parrillaBpWebhookId', 'TU_WEBHOOK_ID')
