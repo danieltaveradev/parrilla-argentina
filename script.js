@@ -1503,7 +1503,11 @@ async function sendChatMessage() {
     chatBusy = true;
     showTyping(true);
 
-    const reply = await sendToN8nChat(mensaje);
+    let reply = null;
+    if (typeof responderInteligente === 'function') {
+        try { reply = await responderInteligente(mensaje); } catch (e) { console.warn('bot local:', e); reply = null; }
+    }
+    if (!reply) reply = await sendToN8nChat(mensaje);
 
     showTyping(false);
     appendMessage(reply, 'in');
