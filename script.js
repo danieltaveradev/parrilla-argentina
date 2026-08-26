@@ -1529,31 +1529,6 @@ async function getBotpressSession() {
 
 const bpSeenIds = new Set();
 
-async function bpFetchMessages(sess, seenIds, onBotMessage, maxWaitMs = 30000) {
-    const inicio = Date.now();
-    while (Date.now() - inicio < maxWaitMs) {
-        await new Promise(r => setTimeout(r, 1500));
-        try {
-            const res = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
-                headers: { 'x-user-key': sess.userKey }
-            });
-            if (!res.ok) continue;
-            const data = await res.json();
-            for (const m of (data.messages || [])) {
-                if (seenIds.has(m.id)) continue;
-                seenIds.add(m.id);
-                if (m.userId !== sess.userId) {
-                    const texto = m.payload?.text ?? m.payload?.markdown
-                        ?? (Array.isArray(m.payload)
-                            ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
-                            : '');
-                    if (texto) onBotMessage(texto);
-                }
-            }
-        } catch {}
-    }
-}
-
 async function sendToBotpress(mensaje) {
     if (!BOTPRESS_WEBHOOK_ID) return null;
 
@@ -1572,9 +1547,12 @@ async function sendToBotpress(mensaje) {
         bpSeenIds.add(message.id);
         let recibidas = 0;
 
+        console.log(`🔵 [BP] Sent message ${message.id}: "${mensaje}"`);
+
         return await new Promise((resolve) => {
             const timer = setTimeout(() => {
                 clearInterval(poll);
+                console.log(`🔵 [BP] Timeout after 45s, recibidas=${recibidas}`);
                 resolve(recibidas > 0 ? '' : CHAT_FALLBACKS[0]);
             }, 45000);
 
@@ -1586,7 +1564,9 @@ async function sendToBotpress(mensaje) {
                     if (!r.ok) return;
                     const data = await r.json();
                     const nuevosBot = [];
-                    for (const m of (data.messages || [])) {
+                    const allMessages = data.messages || [];
+                    console.log(`🔵 [BP] Poll: ${allMessages.length} total msgs, seen=${bpSeenIds.size}`);
+                    for (const m of allMessages) {
                         if (bpSeenIds.has(m.id)) continue;
                         bpSeenIds.add(m.id);
                         if (m.userId !== sess.userId) {
@@ -1594,7 +1574,10 @@ async function sendToBotpress(mensaje) {
                                 ?? (Array.isArray(m.payload)
                                     ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
                                     : '');
-                            if (texto) nuevosBot.push(texto);
+                            if (texto) {
+                                console.log(`🟢 [BP] Bot msg ${m.id}: "${texto.substring(0, 60)}..."`);
+                                nuevosBot.push(texto);
+                            }
                         }
                     }
                     if (nuevosBot.length > 0) {
@@ -1605,7 +1588,7 @@ async function sendToBotpress(mensaje) {
                             appendMessage(texto, 'in');
                         }
                         recibidas += nuevosBot.length;
-                        // esperar 3s más por si llegan mensajes adicionales
+                        console.log(`🟢 [BP] Displayed ${nuevosBot.length} msgs, waiting 3s for more...`);
                         setTimeout(async () => {
                             try {
                                 const r2 = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
@@ -1613,6 +1596,7 @@ async function sendToBotpress(mensaje) {
                                 });
                                 if (r2.ok) {
                                     const d2 = await r2.json();
+                                    const extraBot = [];
                                     for (const m of (d2.messages || [])) {
                                         if (bpSeenIds.has(m.id)) continue;
                                         bpSeenIds.add(m.id);
@@ -1621,11 +1605,20 @@ async function sendToBotpress(mensaje) {
                                                 ?? (Array.isArray(m.payload)
                                                     ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
                                                     : '');
-                                            if (texto) { appendMessage(texto, 'in'); recibidas++; }
+                                            if (texto) {
+                                                console.log(`🟢 [BP] Extra msg ${m.id}: "${texto.substring(0, 60)}..."`);
+                                                extraBot.push(texto);
+                                                appendMessage(texto, 'in');
+                                                recibidas++;
+                                            }
                                         }
+                                    }
+                                    if (extraBot.length > 0) {
+                                        console.log(`🟢 [BP] Found ${extraBot.length} extra msgs after 3s wait`);
                                     }
                                 }
                             } catch {}
+                            console.log(`🔵 [BP] Resolving, total recibidas=${recibidas}`);
                             resolve('');
                         }, 3000);
                         return;
