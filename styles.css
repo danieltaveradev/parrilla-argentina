@@ -3449,8 +3449,9 @@ h1, h2, h3, h4, h5, h6 {
     background: #1a1a1a;
     width: 90%;
     max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
     border-radius: 25px;
-    overflow: hidden;
     border: 2px solid #444;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
     animation: checkoutIn 0.5s ease;
@@ -4703,6 +4704,41 @@ h1, h2, h3, h4, h5, h6 {
     .btn-primary, .btn-secondary {
         width: 100%;
         justify-content: center;
+    }
+}
+
+/* Login modal mobile */
+@media (max-width: 480px) {
+    .login-content {
+        max-height: 85vh;
+        border-radius: 18px;
+    }
+
+    .login-panel {
+        padding: 20px 18px 25px;
+    }
+
+    .login-header {
+        padding: 25px 20px 20px;
+    }
+
+    .login-header .login-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .login-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .login-field input {
+        padding: 12px 14px;
+        font-size: 16px; /* prevents iOS zoom on focus */
+    }
+
+    .btn-login, .btn-register {
+        padding: 14px;
+        font-size: 0.95rem;
     }
 }
 
