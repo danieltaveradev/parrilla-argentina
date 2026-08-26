@@ -1527,6 +1527,8 @@ async function getBotpressSession() {
     return sess;
 }
 
+const bpSeenIds = new Set();
+
 async function bpFetchMessages(sess, seenIds, onBotMessage, maxWaitMs = 30000) {
     const inicio = Date.now();
     while (Date.now() - inicio < maxWaitMs) {
@@ -1567,7 +1569,7 @@ async function sendToBotpress(mensaje) {
         if (!res.ok) throw new Error(`message HTTP ${res.status}`);
         const { message } = await res.json();
 
-        const seenIds = new Set([message.id]);
+        bpSeenIds.add(message.id);
         let recibidas = 0;
 
         return await new Promise((resolve) => {
@@ -1585,8 +1587,8 @@ async function sendToBotpress(mensaje) {
                     const data = await r.json();
                     const nuevosBot = [];
                     for (const m of (data.messages || [])) {
-                        if (seenIds.has(m.id)) continue;
-                        seenIds.add(m.id);
+                        if (bpSeenIds.has(m.id)) continue;
+                        bpSeenIds.add(m.id);
                         if (m.userId !== sess.userId) {
                             const texto = m.payload?.text ?? m.payload?.markdown
                                 ?? (Array.isArray(m.payload)
@@ -1612,8 +1614,8 @@ async function sendToBotpress(mensaje) {
                                 if (r2.ok) {
                                     const d2 = await r2.json();
                                     for (const m of (d2.messages || [])) {
-                                        if (seenIds.has(m.id)) continue;
-                                        seenIds.add(m.id);
+                                        if (bpSeenIds.has(m.id)) continue;
+                                        bpSeenIds.add(m.id);
                                         if (m.userId !== sess.userId) {
                                             const texto = m.payload?.text ?? m.payload?.markdown
                                                 ?? (Array.isArray(m.payload)
