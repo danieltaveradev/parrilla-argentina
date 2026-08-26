@@ -1386,7 +1386,17 @@ function sendOffersToClients() {
     }, 2500);
 }
 
-// ============ CHATBOT ESTILO WHATSAPP (n8n) ============
+// ============ CHATBOT ESTILO WHATSAPP ============
+// Conexión directa a Botpress Chat API (integración "Chat" del bot).
+// n8n NO recibe chats: queda solo para reservas/pedidos (Sheets/Gmail).
+//
+// 1) Pega aquí el webhookId que genera Botpress Studio al activar la integración "Chat":
+const BOTPRESS_WEBHOOK_ID_CODIGO = '';
+//
+// 2) O configúralo sin editar código (consola del navegador):
+//    localStorage.setItem('parrillaBpWebhookId', 'TU_WEBHOOK_ID')
+const BOTPRESS_WEBHOOK_ID = BOTPRESS_WEBHOOK_ID_CODIGO || localStorage.getItem('parrillaBpWebhookId') || '';
+
 let chatSessionId = localStorage.getItem('parrillaChatSession');
 if (!chatSessionId) {
     chatSessionId = 'web-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8);
@@ -1446,45 +1456,133 @@ function showTyping(show) {
     }
 }
 
-async function sendToN8nChat(mensaje) {
-    const payload = {
-        tipo: 'chat',
-        mensaje,
-        nombre: currentUser?.name || 'Visitante Web',
-        sessionId: chatSessionId,
-        origen: 'chatbot-web',
-        timestamp: new Date().toISOString()
+// ---- Botpress Chat API (REST) ----
+function bpApiUrl() {
+    return `https://chat.botpress.cloud/${BOTPRESS_WEBHOOK_ID}`;
+}
+
+async function getBotpressSession() {
+    let sess = null;
+    try { sess = JSON.parse(localStorage.getItem('parrillaBpSession') || 'null'); } catch {}
+    if (sess?.userKey && sess?.conversationId && sess?.webhookId === BOTPRESS_WEBHOOK_ID) return sess;
+
+    const uRes = await fetch(`${bpApiUrl()}/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+    });
+    if (!uRes.ok) throw new Error(`users HTTP ${uRes.status}`);
+    const { user, key } = await uRes.json();
+
+    let cRes = await fetch(`${bpApiUrl()}/conversations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-user-key': key },
+        body: JSON.stringify({})
+    });
+    if (!cRes.ok) {
+        cRes = await fetch(`${bpApiUrl()}/conversations`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-user-key': key },
+            body: JSON.stringify({ clientUserId: user.id })
+        });
+    }
+    if (!cRes.ok) throw new Error(`conversations HTTP ${cRes.status}`);
+    const { conversation } = await cRes.json();
+
+    sess = {
+        webhookId: BOTPRESS_WEBHOOK_ID,
+        userId: user.id,
+        userKey: key,
+        conversationId: conversation.id
     };
+    localStorage.setItem('parrillaBpSession', JSON.stringify(sess));
+    chatSessionId = conversation.id;
+    localStorage.setItem('parrillaChatSession', conversation.id);
+    return sess;
+}
+
+async function bpFetchMessages(sess, seenIds, onBotMessage, maxWaitMs = 30000) {
+    const inicio = Date.now();
+    while (Date.now() - inicio < maxWaitMs) {
+        await new Promise(r => setTimeout(r, 1500));
+        try {
+            const res = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
+                headers: { 'x-user-key': sess.userKey }
+            });
+            if (!res.ok) continue;
+            const data = await res.json();
+            for (const m of (data.messages || [])) {
+                if (seenIds.has(m.id)) continue;
+                seenIds.add(m.id);
+                if (m.userId !== sess.userId) {
+                    const texto = m.payload?.text ?? m.payload?.markdown
+                        ?? (Array.isArray(m.payload)
+                            ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
+                            : '');
+                    if (texto) onBotMessage(texto);
+                }
+            }
+        } catch {}
+    }
+}
+
+async function sendToBotpress(mensaje) {
+    if (!BOTPRESS_WEBHOOK_ID) return null;
 
     try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 30000);
+        showTyping(true);
+        const sess = await getBotpressSession();
 
-        const response = await fetch(N8N_WEBHOOK_URL, {
+        const res = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            signal: controller.signal
+            headers: { 'Content-Type': 'application/json', 'x-user-key': sess.userKey },
+            body: JSON.stringify({ payload: { type: 'text', text: mensaje } })
         });
-        clearTimeout(timeout);
+        if (!res.ok) throw new Error(`message HTTP ${res.status}`);
+        const { message } = await res.json();
 
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const seenIds = new Set([message.id]);
+        let recibidas = 0;
 
-        const text = await response.text();
-        if (!text || !text.trim()) throw new Error('respuesta vacía');
+        return await new Promise((resolve) => {
+            const timer = setTimeout(() => {
+                clearInterval(poll);
+                resolve(recibidas > 0 ? '' : CHAT_FALLBACKS[0]);
+            }, 45000);
 
-        let data;
-        try { data = JSON.parse(text); } catch { return text.trim(); }
-
-        if (typeof data === 'string') return data;
-        const reply = data.reply || data.output || data.respuesta || data.message || data.text
-            || (Array.isArray(data) && (data[0]?.reply || data[0]?.output || data[0]?.respuesta));
-        if (reply) return String(reply);
-
-        throw new Error('sin campo de respuesta');
+            const poll = setInterval(async () => {
+                try {
+                    const r = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
+                        headers: { 'x-user-key': sess.userKey }
+                    });
+                    if (!r.ok) return;
+                    const data = await r.json();
+                    for (const m of (data.messages || [])) {
+                        if (seenIds.has(m.id)) continue;
+                        seenIds.add(m.id);
+                        if (m.userId !== sess.userId) {
+                            const texto = m.payload?.text ?? m.payload?.markdown
+                                ?? (Array.isArray(m.payload)
+                                    ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
+                                    : '');
+                            if (!texto) continue;
+                            recibidas++;
+                            clearTimeout(timer);
+                            clearInterval(poll);
+                            showTyping(false);
+                            appendMessage(texto, 'in');
+                            // seguimos escuchando un poco más por si el bot manda más partes
+                            setTimeout(() => resolve(''), 2500);
+                            return;
+                        }
+                    }
+                } catch {}
+            }, 1500);
+        });
     } catch (err) {
-        console.warn('⚠️ n8n chat:', err.message);
-        return CHAT_FALLBACKS[Math.floor(Math.random() * CHAT_FALLBACKS.length)];
+        console.warn('⚠️ Botpress chat:', err.message);
+        showTyping(false);
+        return null;
     }
 }
 
@@ -1501,16 +1599,28 @@ async function sendChatMessage() {
     hideQuickReplies();
 
     chatBusy = true;
-    showTyping(true);
 
     let reply = null;
     if (typeof responderInteligente === 'function') {
         try { reply = await responderInteligente(mensaje); } catch (e) { console.warn('bot local:', e); reply = null; }
     }
-    if (!reply) reply = await sendToN8nChat(mensaje);
 
-    showTyping(false);
-    appendMessage(reply, 'in');
+    if (reply) {
+        showTyping(true);
+        await new Promise(r => setTimeout(r, 600));
+        showTyping(false);
+        appendMessage(reply, 'in');
+        chatBusy = false;
+        document.getElementById('chatInput').focus();
+        return;
+    }
+
+    const bpReply = await sendToBotpress(mensaje);
+    if (!bpReply) {
+        appendMessage(CHAT_FALLBACKS[Math.floor(Math.random() * CHAT_FALLBACKS.length)], 'in');
+    } else if (bpReply !== '') {
+        appendMessage(bpReply, 'in');
+    }
     chatBusy = false;
     document.getElementById('chatInput').focus();
 }
