@@ -1583,6 +1583,7 @@ async function sendToBotpress(mensaje) {
                     });
                     if (!r.ok) return;
                     const data = await r.json();
+                    const nuevosBot = [];
                     for (const m of (data.messages || [])) {
                         if (seenIds.has(m.id)) continue;
                         seenIds.add(m.id);
@@ -1591,16 +1592,41 @@ async function sendToBotpress(mensaje) {
                                 ?? (Array.isArray(m.payload)
                                     ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
                                     : '');
-                            if (!texto) continue;
-                            recibidas++;
-                            clearTimeout(timer);
-                            clearInterval(poll);
-                            showTyping(false);
-                            appendMessage(texto, 'in');
-                            // seguimos escuchando un poco más por si el bot manda más partes
-                            setTimeout(() => resolve(''), 2500);
-                            return;
+                            if (texto) nuevosBot.push(texto);
                         }
+                    }
+                    if (nuevosBot.length > 0) {
+                        clearTimeout(timer);
+                        clearInterval(poll);
+                        showTyping(false);
+                        for (const texto of nuevosBot) {
+                            appendMessage(texto, 'in');
+                        }
+                        recibidas += nuevosBot.length;
+                        // esperar 3s más por si llegan mensajes adicionales
+                        setTimeout(async () => {
+                            try {
+                                const r2 = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
+                                    headers: { 'x-user-key': sess.userKey }
+                                });
+                                if (r2.ok) {
+                                    const d2 = await r2.json();
+                                    for (const m of (d2.messages || [])) {
+                                        if (seenIds.has(m.id)) continue;
+                                        seenIds.add(m.id);
+                                        if (m.userId !== sess.userId) {
+                                            const texto = m.payload?.text ?? m.payload?.markdown
+                                                ?? (Array.isArray(m.payload)
+                                                    ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
+                                                    : '');
+                                            if (texto) { appendMessage(texto, 'in'); recibidas++; }
+                                        }
+                                    }
+                                }
+                            } catch {}
+                            resolve('');
+                        }, 3000);
+                        return;
                     }
                 } catch {}
             }, 1500);
