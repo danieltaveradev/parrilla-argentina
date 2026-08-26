@@ -174,6 +174,11 @@ function checkDisponibilidad(fecha, hora, personas) {
         `🪑 Cupos libres en ese horario: ${cuposRestantes}` };
 }
 
+function horaAHora24(hFloat) {
+    const h = Math.floor(hFloat), min = Math.round((hFloat - h) * 60);
+    return `${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
+}
+
 async function guardarReservaChat(data) {
     chatReservas.push(data);
     localStorage.setItem('parrillaChatReservas', JSON.stringify(chatReservas));
@@ -186,13 +191,18 @@ async function guardarReservaChat(data) {
                 tipo: 'reserva',
                 origen: 'chatbot-web',
                 sessionId: typeof chatSessionId !== 'undefined' ? chatSessionId : null,
-                nombre: data.nombre,
-                telefono: data.telefono,
-                email: data.email || '',
-                fecha: data.fecha,
-                hora: data.horaStr,
-                personas: data.personas,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                datos: {
+                    Nombre: data.nombre,
+                    Email: data.email || '',
+                    Telefono: data.telefono,
+                    Fecha: fechaAKey(data.fecha),
+                    Hora: horaAHora24(data.hora),
+                    Personas: String(data.personas),
+                    Ubicacion_Preferida: data.ubicacion || 'Local',
+                    Celebracion_Especial: data.celebracion || 'Ninguna',
+                    Estado: 'Pendiente'
+                }
             })
         });
     } catch (e) {
@@ -239,9 +249,22 @@ function iniciarFlujoReserva(prefill = {}) {
     return disp.motivo + '\n\n👤 ¿A nombre de quién dejo la reserva?';
 }
 
+function detectarExtrasEnMensaje(texto, data) {
+    const t = normTexto(texto);
+    if (/\b(terraza|terrazas)\b/.test(t)) data.ubicacion = 'Terraza';
+    if (/\b(privad|vip)\b/.test(t)) data.ubicacion = 'Privado';
+    if (/\bcumplea(n|ñ)os?\b/.test(t)) data.celebracion = 'Cumpleaños';
+    if (/\baniversario\b/.test(t)) data.celebracion = 'Aniversario';
+    if (/\b(trabajo|reuni[oó]n|corporativo|empresa)\b/.test(t)) data.celebracion = 'Reunión de trabajo';
+    if (/\b(romantic|cena\s+romantic|pareja)\b/.test(t)) data.celebracion = 'Cena romántica';
+    if (/\b(familia|familiar)\b/.test(t)) data.celebracion = 'Reunión familiar';
+}
+
 async function procesarFlujoReserva(texto) {
     const t = normTexto(texto);
     const d = chatFlow.data;
+
+    detectarExtrasEnMensaje(texto, d);
 
     if (/\b(cancel|cancelar|olvidalo|mejor no)\b/.test(t)) {
         chatFlow = { active:false, step:null, data:{} };
@@ -303,17 +326,18 @@ async function procesarFlujoReserva(texto) {
             if (/\b(si|sí|claro|correcto|ok|perfecto|listo|dale|confirmo|confirma)\b/.test(t)) {
                 await guardarReservaChat({
                     nombre: d.nombre,
+                    email: d.email || '',
                     telefono: d.telefono,
-                    fecha: fechaAKey(d.fecha),
-                    fechaLegible: formatearFecha(d.fecha),
+                    fecha: d.fecha,
                     hora: d.hora,
-                    horaStr: formatearHora(d.hora),
                     personas: d.personas,
-                    estado: 'Confirmada',
-                    origen: 'chatbot'
+                    ubicacion: d.ubicacion || 'Local',
+                    celebracion: d.celebracion || 'Ninguna'
                 });
+                const ubic = d.ubicacion && d.ubicacion !== 'Local' ? `\n🏠 Sala: **${d.ubicacion}**` : '';
+                const celeb = d.celebracion && d.celebracion !== 'Ninguna' ? `\n🎉 Ocasión: **${d.celebracion}**` : '';
                 chatFlow = { active:false, step:null, data:{} };
-                return `🎉 ¡Listo! Tu reserva quedó confirmada:\n\n📅 ${formatearFecha(d.fecha).charAt(0).toUpperCase() + formatearFecha(d.fecha).slice(1)}\n🕐 ${formatearHora(d.hora)}\n👥 ${d.personas} persona${d.personas>1?'s':''}\n👤 ${d.nombre}\n\nTe esperamos en Carrera 38 # 10-47, El Poblado 🔥\nSi necesitas cancelar o cambiar algo, escríbenos con tiempo.`;
+                return `🎉 ¡Listo! Tu reserva quedó confirmada:\n\n📅 **${formatearFecha(d.fecha).charAt(0).toUpperCase() + formatearFecha(d.fecha).slice(1)}**\n🕐 **${formatearHora(d.hora)}**\n👥 **${d.personas}** persona${d.personas>1?'s':''}\n👤 **${d.nombre}**${ubic}${celeb}\n\nTe esperamos en Carrera 38 # 10-47, El Poblado 🔥\nSi necesitas cancelar o cambiar algo, escríbenos con tiempo.`;
             }
             if (/\b(no|cambiar|otro|mal|equivocado)\b/.test(t)) {
                 chatFlow = { active:false, step:null, data:{} };
