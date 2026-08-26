@@ -2345,10 +2345,12 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     .chat-widget {
-        bottom: 84px;
-        right: 12px;
-        width: calc(100vw - 24px);
-        height: calc(100vh - 120px);
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
     }
 }
 
