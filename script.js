@@ -1629,18 +1629,7 @@ async function sendChatMessage() {
     const bpResult = await sendToBotpress(mensaje);
 
     if (bpResult === null) {
-        let reply = null;
-        if (typeof responderInteligente === 'function') {
-            try { reply = await responderInteligente(mensaje); } catch (e) { console.warn('bot local:', e); reply = null; }
-        }
-        if (reply) {
-            showTyping(true);
-            await new Promise(r => setTimeout(r, 600));
-            showTyping(false);
-            appendMessage(reply, 'in');
-        } else {
-            appendMessage(CHAT_FALLBACKS[Math.floor(Math.random() * CHAT_FALLBACKS.length)], 'in');
-        }
+        appendMessage(CHAT_FALLBACKS[Math.floor(Math.random() * CHAT_FALLBACKS.length)], 'in');
     }
     chatBusy = false;
     document.getElementById('chatInput').focus();
