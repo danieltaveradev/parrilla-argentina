@@ -1580,7 +1580,7 @@ async function sendToBotpress(mensaje) {
             }, 1500);
         });
     } catch (err) {
-        console.warn('⚠️ Botpress chat:', err.message);
+        console.error('🔴 Botpress error:', err);
         showTyping(false);
         return null;
     }
