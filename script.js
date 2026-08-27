@@ -2103,28 +2103,28 @@ async function getBotpressSession() {
     try { sess = JSON.parse(localStorage.getItem('parrillaBpSession') || 'null'); } catch {}
     if (sess?.userKey && sess?.conversationId && sess?.webhookId === BOTPRESS_WEBHOOK_ID) return sess;
 
-    const uRes = await fetch(`${bpApiUrl()}/users`, {
+    const uData = await bpFetchJson(`${bpApiUrl()}/users`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify({})
     });
-    if (!uRes.ok) throw new Error(`users HTTP ${uRes.status}`);
-    const { user, key } = await uRes.json();
+    if (!uData) throw new Error('users POST failed');
+    const { user, key } = uData;
 
-    let cRes = await fetch(`${bpApiUrl()}/conversations`, {
+    let cData = await bpFetchJson(`${bpApiUrl()}/conversations`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-user-key': key },
+        headers: { 'Content-Type': 'application/json; charset=utf-8', 'x-user-key': key },
         body: JSON.stringify({})
     });
-    if (!cRes.ok) {
-        cRes = await fetch(`${bpApiUrl()}/conversations`, {
+    if (!cData) {
+        cData = await bpFetchJson(`${bpApiUrl()}/conversations`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-user-key': key },
+            headers: { 'Content-Type': 'application/json; charset=utf-8', 'x-user-key': key },
             body: JSON.stringify({ clientUserId: user.id })
         });
     }
-    if (!cRes.ok) throw new Error(`conversations HTTP ${cRes.status}`);
-    const { conversation } = await cRes.json();
+    if (!cData) throw new Error('conversations POST failed');
+    const { conversation } = cData;
 
     sess = {
         webhookId: BOTPRESS_WEBHOOK_ID,
@@ -2140,6 +2140,14 @@ async function getBotpressSession() {
 
 const bpSeenIds = new Set();
 
+async function bpFetchJson(url, opts = {}) {
+    const r = await fetch(url, opts);
+    if (!r.ok) return null;
+    const buf = await r.arrayBuffer();
+    const txt = new TextDecoder('utf-8').decode(buf);
+    return JSON.parse(txt);
+}
+
 async function sendToBotpress(mensaje) {
     if (!BOTPRESS_WEBHOOK_ID) return null;
 
@@ -2147,13 +2155,12 @@ async function sendToBotpress(mensaje) {
         showTyping(true);
         const sess = await getBotpressSession();
 
-        const res = await fetch(`${bpApiUrl()}/messages`, {
+        const { message } = await bpFetchJson(`${bpApiUrl()}/messages`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-user-key': sess.userKey },
+            headers: { 'Content-Type': 'application/json; charset=utf-8', 'x-user-key': sess.userKey },
             body: JSON.stringify({ payload: { type: 'text', text: mensaje }, conversationId: sess.conversationId })
         });
-        if (!res.ok) throw new Error(`message HTTP ${res.status}`);
-        const { message } = await res.json();
+        if (!message) throw new Error('message POST failed');
 
         bpSeenIds.add(message.id);
         let recibidas = 0;
@@ -2166,11 +2173,10 @@ async function sendToBotpress(mensaje) {
 
             const poll = setInterval(async () => {
                 try {
-                    const r = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
+                    const data = await bpFetchJson(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
                         headers: { 'x-user-key': sess.userKey }
                     });
-                    if (!r.ok) return;
-                    const data = await r.json();
+                    if (!data) return;
                     const nuevosBot = [];
                     const allMessages = data.messages || [];
                     for (const m of allMessages) {
@@ -2194,11 +2200,10 @@ async function sendToBotpress(mensaje) {
                         recibidas += nuevosBot.length;
                         setTimeout(async () => {
                             try {
-                                const r2 = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
+                                const d2 = await bpFetchJson(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
                                     headers: { 'x-user-key': sess.userKey }
                                 });
-                                if (r2.ok) {
-                                    const d2 = await r2.json();
+                                if (d2) {
                                     for (const m of (d2.messages || [])) {
                                         if (bpSeenIds.has(m.id)) continue;
                                         bpSeenIds.add(m.id);
