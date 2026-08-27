@@ -1154,8 +1154,10 @@ function loadReservasData() {
     if (!tbody) return;
     const filter = document.getElementById('reservaFilter')?.value || 'all';
     const search = (document.getElementById('reservaSearch')?.value || '').toLowerCase();
+    const today = new Date().toISOString().split('T')[0];
     let filtered = testReservas;
-    if (filter !== 'all') filtered = filtered.filter(r => r.estado === filter);
+    if (filter === 'hoy') filtered = filtered.filter(r => r.fecha === today);
+    else if (filter !== 'all') filtered = filtered.filter(r => r.estado === filter);
     if (search) filtered = filtered.filter(r => r.nombre.toLowerCase().includes(search) || r.telefono.includes(search));
     document.getElementById('totalReservas').textContent = testReservas.length;
     document.getElementById('reservasPendientes').textContent = testReservas.filter(r => r.estado === 'Pendiente').length;
