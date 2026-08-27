@@ -2044,6 +2044,7 @@ function clearChatHistory() {
     if (!confirm('¿Limpiar el historial del chat?')) return;
     localStorage.removeItem('parrillaBpSession');
     localStorage.removeItem('parrillaChatSession');
+    localStorage.removeItem('parrillaLastConvId');
     bpSeenIds.clear();
     chatBusy = false;
     const body = document.getElementById('chatBody');
@@ -2161,8 +2162,15 @@ async function sendToBotpress(mensaje) {
             body: JSON.stringify({ payload: { type: 'text', text: mensaje }, conversationId: sess.conversationId })
         });
         if (!message) throw new Error('message POST failed');
-
         bpSeenIds.add(message.id);
+
+        const preR = await bpFetchJson(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
+            headers: { 'x-user-key': sess.userKey }
+        });
+        if (preR?.messages) {
+            for (const m of preR.messages) bpSeenIds.add(m.id);
+        }
+
         let recibidas = 0;
 
         return await new Promise((resolve) => {
