@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Parrillero Argentino - Carnes a la Parrilla</title>
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="stylesheet" href="styles.css?v=5">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -2193,6 +2193,9 @@ class="login-logo">
             <div class="admin-header">
                 <i class="fas fa-cog"></i>
                 <h2>Panel de Administración</h2>
+                <button class="btn-emp-clock" onclick="openEmployeeClock()">
+                    <i class="fas fa-fingerprint"></i> Registro Empleado
+                </button>
             </div>
 
             <div class="admin-tabs">
@@ -2622,6 +2625,7 @@ class="login-logo">
                                 <th>Salida</th>
                                 <th>Horas/Día</th>
                                 <th>H. Extras</th>
+                                <th>Asistencia Hoy</th>
                                 <th>Días</th>
                                 <th>Acciones</th>
                             </tr>
@@ -2662,7 +2666,42 @@ class="login-logo">
         </div>
     </div>
 
-    <script src="script.js?v=17"></script>
+    <div class="emp-clock-modal" id="empClockModal" style="display:none;">
+        <div class="emp-clock-content">
+            <button class="emp-clock-close" onclick="closeEmployeeClock()"><i class="fas fa-times"></i></button>
+            <div class="emp-clock-icon"><i class="fas fa-fingerprint"></i></div>
+            <h3>Registro de Asistencia</h3>
+            <p id="empClockStatus">Ingresa tus credenciales para registrar entrada o salida</p>
+
+            <div id="empClockLoginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Usuario</label>
+                    <input type="text" id="clockUser" placeholder="Ej: mperez1">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" id="clockPass" placeholder="Tu contraseña">
+                </div>
+                <p id="clockError" style="color:#e74c3c;font-size:0.85rem;min-height:18px;"></p>
+                <button class="btn-save-offer" onclick="employeeClockAction()" style="width:100%;">
+                    <i class="fas fa-fingerprint"></i> <span id="clockBtnLabel">Registrar Entrada</span>
+                </button>
+            </div>
+
+            <div id="empClockInfo" style="display:none;">
+                <div class="emp-clock-info-card">
+                    <p><strong id="clockEmpName"></strong></p>
+                    <p id="clockEmpCargo"></p>
+                    <p id="clockEmpTime"></p>
+                </div>
+                <button class="btn-save-offer" onclick="employeeClockAction()" style="width:100%;margin-top:12px;" id="clockActionBtn">
+                    <i class="fas fa-sign-out-alt"></i> <span id="clockBtnLabel2">Registrar Salida</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=18"></script>
     <script src="chatbot-reservas.js?v=7"></script>
 
     <!-- ============ CHATBOT ESTILO WHATSAPP ============ -->

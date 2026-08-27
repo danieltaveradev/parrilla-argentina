@@ -5239,3 +5239,119 @@ h1, h2, h3, h4, h5, h6 {
 #chatFrame {
     transition: opacity 0.3s ease;
 }
+
+/* ============ EMPLOYEE CLOCK MODAL ============ */
+.emp-clock-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.emp-clock-content {
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 32px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    text-align: center;
+    color: #e0e0e0;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+.emp-clock-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.emp-clock-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8F241C, #C0392B);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 1.8rem;
+    color: #fff;
+}
+
+.emp-clock-content h3 {
+    margin: 0 0 8px;
+    color: #fff;
+}
+
+.emp-clock-content p {
+    margin: 0 0 16px;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.emp-clock-info-card {
+    background: rgba(143,36,28,0.1);
+    border: 1px solid rgba(143,36,28,0.3);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 8px;
+}
+
+.emp-clock-info-card p {
+    margin: 4px 0;
+    color: #e0e0e0;
+}
+
+.btn-emp-clock {
+    background: rgba(143,36,28,0.15);
+    border: 1px solid rgba(143,36,28,0.3);
+    color: #C69A45;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.btn-emp-clock:hover {
+    background: rgba(143,36,28,0.3);
+}
+
+.attendance-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.attendance-in {
+    background: rgba(40,167,69,0.15);
+    color: #28a745;
+}
+
+.attendance-out {
+    background: rgba(220,53,69,0.15);
+    color: #dc3545;
+}
+
+.attendance-none {
+    background: rgba(150,150,150,0.15);
+    color: #999;
+}

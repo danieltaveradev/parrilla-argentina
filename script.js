@@ -1849,6 +1849,92 @@ function sendOffersToClients() {
 // ============ GESTIÓN DE EMPLEADOS ============
 let empleados = JSON.parse(localStorage.getItem('parrillaEmpleados') || '[]');
 let currentOvertimeEmpId = null;
+let attendanceLog = JSON.parse(localStorage.getItem('parrillaAttendance') || '[]');
+let clockEmpId = null;
+
+function openEmployeeClock() {
+    document.getElementById('empClockModal').style.display = 'flex';
+    document.getElementById('empClockLoginForm').style.display = 'block';
+    document.getElementById('empClockInfo').style.display = 'none';
+    document.getElementById('clockUser').value = '';
+    document.getElementById('clockPass').value = '';
+    document.getElementById('clockError').textContent = '';
+    document.getElementById('empClockStatus').textContent = 'Ingresa tus credenciales para registrar entrada o salida';
+}
+
+function closeEmployeeClock() {
+    document.getElementById('empClockModal').style.display = 'none';
+    clockEmpId = null;
+}
+
+function employeeClockAction() {
+    if (clockEmpId) {
+        const emp = empleados.find(e => e.id === clockEmpId);
+        if (!emp) return closeEmployeeClock();
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false });
+        const today = now.toISOString().split('T')[0];
+        const lastRecord = [...attendanceLog].reverse().find(r => r.empId === clockEmpId && r.date === today);
+
+        if (lastRecord && !lastRecord.clockOut) {
+            lastRecord.clockOut = timeStr;
+            localStorage.setItem('parrillaAttendance', JSON.stringify(attendanceLog));
+            document.getElementById('clockEmpTime').innerHTML = `<i class="fas fa-sign-out-alt"></i> Salida: <strong>${timeStr}</strong>`;
+            document.getElementById('clockBtnLabel2').textContent = 'Salir';
+            document.getElementById('empClockStatus').textContent = `✅ Salida registrada a las ${timeStr}`;
+            showNotification(`${emp.name} registró salida a las ${timeStr}`);
+            setTimeout(closeEmployeeClock, 2000);
+        } else {
+            attendanceLog.push({ empId: clockEmpId, name: emp.name, cargo: emp.cargo, date: today, clockIn: timeStr, clockOut: null });
+            localStorage.setItem('parrillaAttendance', JSON.stringify(attendanceLog));
+            document.getElementById('clockEmpTime').innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrada: <strong>${timeStr}</strong>`;
+            document.getElementById('empClockStatus').textContent = `✅ Entrada registrada a las ${timeStr}`;
+            document.getElementById('clockBtnLabel2').textContent = 'Registrar Salida';
+            showNotification(`${emp.name} registró entrada a las ${timeStr}`);
+        }
+        loadEmpleadosData();
+        return;
+    }
+
+    const user = document.getElementById('clockUser').value.trim();
+    const pass = document.getElementById('clockPass').value;
+    const errorEl = document.getElementById('clockError');
+
+    if (!user || !pass) { errorEl.textContent = 'Completa usuario y contraseña'; return; }
+
+    const emp = empleados.find(e => e.username === user && e.password === pass);
+    if (!emp) { errorEl.textContent = 'Credenciales incorrectas'; return; }
+
+    clockEmpId = emp.id;
+    const today = new Date().toISOString().split('T')[0];
+    const lastRecord = [...attendanceLog].reverse().find(r => r.empId === emp.id && r.date === today);
+
+    document.getElementById('empClockLoginForm').style.display = 'none';
+    document.getElementById('empClockInfo').style.display = 'block';
+    document.getElementById('clockEmpName').textContent = emp.name;
+    document.getElementById('clockEmpCargo').textContent = emp.cargo;
+
+    if (lastRecord && !lastRecord.clockOut) {
+        document.getElementById('clockEmpTime').innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrada: <strong>${lastRecord.clockIn}</strong>`;
+        document.getElementById('clockBtnLabel2').textContent = 'Registrar Salida';
+        document.getElementById('empClockStatus').textContent = `Hola ${emp.name.split(' ')[0]}, ya registraste tu entrada hoy.`;
+    } else {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false });
+        document.getElementById('clockEmpTime').innerHTML = `<i class="fas fa-clock"></i> Hora actual: <strong>${timeStr}</strong>`;
+        document.getElementById('clockBtnLabel2').textContent = 'Registrar Entrada';
+        document.getElementById('empClockStatus').textContent = `Hola ${emp.name.split(' ')[0]}, presiona para registrar tu entrada.`;
+    }
+}
+
+function getEmpAttendanceStatus(empId) {
+    const today = new Date().toISOString().split('T')[0];
+    const record = [...attendanceLog].reverse().find(r => r.empId === empId && r.date === today);
+    if (!record) return { status: 'none', text: 'Sin registro' };
+    if (record.clockIn && !record.clockOut) return { status: 'in', text: `Entrada: ${record.clockIn}` };
+    if (record.clockIn && record.clockOut) return { status: 'out', text: `${record.clockIn} – ${record.clockOut}` };
+    return { status: 'none', text: 'Sin registro' };
+}
 
 function generateTestEmployees() {
     if (empleados.length > 0) return;
@@ -2042,11 +2128,14 @@ function loadEmpleadosData() {
     }
 
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr class="empty-row"><td colspan="10">No se encontraron empleados</td></tr>';
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="11">No se encontraron empleados</td></tr>';
         return;
     }
 
-    tbody.innerHTML = filtered.map(e => `
+    tbody.innerHTML = filtered.map(e => {
+        const att = getEmpAttendanceStatus(e.id);
+        const attClass = att.status === 'in' ? 'attendance-in' : att.status === 'out' ? 'attendance-out' : 'attendance-none';
+        return `
         <tr>
             <td>${e.name}</td>
             <td>${e.doc}</td>
@@ -2061,14 +2150,15 @@ function loadEmpleadosData() {
                     <i class="fas fa-plus"></i>
                 </button>
             </td>
+            <td><span class="attendance-status ${attClass}">${att.text}</span></td>
             <td><small>${e.days.join(', ')}</small></td>
             <td class="actions-cell">
                 <button class="btn-icon-delete" onclick="deleteEmployee(${e.id})" title="Eliminar">
                     <i class="fas fa-trash"></i>
                 </button>
             </td>
-        </tr>
-    `).join('');
+        </tr>`;
+    }).join('');
 }
 
 function filterEmpleados() {
