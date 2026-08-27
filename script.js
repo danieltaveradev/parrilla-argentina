@@ -2029,6 +2029,7 @@ function toggleChat() {
 
     if (isOpen) {
         if (badge) badge.style.display = 'none';
+        chatBusy = false;
         setTimeout(() => document.getElementById('chatInput')?.focus(), 300);
     }
 }
@@ -2036,6 +2037,28 @@ function toggleChat() {
 function minimizeChat(e) {
     if (e) e.stopPropagation();
     document.getElementById('chatWidget').classList.remove('open');
+}
+
+function clearChatHistory() {
+    if (!confirm('¿Limpiar el historial del chat?')) return;
+    localStorage.removeItem('parrillaBpSession');
+    localStorage.removeItem('parrillaChatSession');
+    bpSeenIds.clear();
+    chatBusy = false;
+    const body = document.getElementById('chatBody');
+    body.innerHTML = `
+        <div class="chat-date">HOY</div>
+        <div class="msg msg-in">
+            <div class="msg-bubble">
+                ¡Hola! 👋 Bienvenido a <b>El Parrillero Argentino</b>.
+                ¿En qué te puedo ayudar hoy?
+                <span class="msg-time">${getNowTime()} <i class="fas fa-check-double"></i></span>
+            </div>
+        </div>
+    `;
+    const qr = document.getElementById('quickReplies');
+    if (qr) qr.style.display = 'flex';
+    showNotification('Chat reiniciado');
 }
 
 function getNowTime() {
@@ -2134,14 +2157,11 @@ async function sendToBotpress(mensaje) {
         bpSeenIds.add(message.id);
         let recibidas = 0;
 
-        console.log(`🔵 [BP] Sent message ${message.id}: "${mensaje}"`);
-
         return await new Promise((resolve) => {
             const timer = setTimeout(() => {
                 clearInterval(poll);
-                console.log(`🔵 [BP] Timeout after 45s, recibidas=${recibidas}`);
                 resolve(recibidas > 0 ? '' : CHAT_FALLBACKS[0]);
-            }, 45000);
+            }, 20000);
 
             const poll = setInterval(async () => {
                 try {
@@ -2152,7 +2172,6 @@ async function sendToBotpress(mensaje) {
                     const data = await r.json();
                     const nuevosBot = [];
                     const allMessages = data.messages || [];
-                    console.log(`🔵 [BP] Poll: ${allMessages.length} total msgs, seen=${bpSeenIds.size}`);
                     for (const m of allMessages) {
                         if (bpSeenIds.has(m.id)) continue;
                         bpSeenIds.add(m.id);
@@ -2161,10 +2180,7 @@ async function sendToBotpress(mensaje) {
                                 ?? (Array.isArray(m.payload)
                                     ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
                                     : '');
-                            if (texto) {
-                                console.log(`🟢 [BP] Bot msg ${m.id}: "${texto.substring(0, 60)}..."`);
-                                nuevosBot.push(texto);
-                            }
+                            if (texto) nuevosBot.push(texto);
                         }
                     }
                     if (nuevosBot.length > 0) {
@@ -2175,7 +2191,6 @@ async function sendToBotpress(mensaje) {
                             appendMessage(texto, 'in');
                         }
                         recibidas += nuevosBot.length;
-                        console.log(`🟢 [BP] Displayed ${nuevosBot.length} msgs, waiting 3s for more...`);
                         setTimeout(async () => {
                             try {
                                 const r2 = await fetch(`${bpApiUrl()}/conversations/${sess.conversationId}/messages`, {
@@ -2183,7 +2198,6 @@ async function sendToBotpress(mensaje) {
                                 });
                                 if (r2.ok) {
                                     const d2 = await r2.json();
-                                    const extraBot = [];
                                     for (const m of (d2.messages || [])) {
                                         if (bpSeenIds.has(m.id)) continue;
                                         bpSeenIds.add(m.id);
@@ -2192,20 +2206,11 @@ async function sendToBotpress(mensaje) {
                                                 ?? (Array.isArray(m.payload)
                                                     ? m.payload.map(p => p.text ?? p.markdown ?? '').join('\n').trim()
                                                     : '');
-                                            if (texto) {
-                                                console.log(`🟢 [BP] Extra msg ${m.id}: "${texto.substring(0, 60)}..."`);
-                                                extraBot.push(texto);
-                                                appendMessage(texto, 'in');
-                                                recibidas++;
-                                            }
+                                            if (texto) { appendMessage(texto, 'in'); recibidas++; }
                                         }
-                                    }
-                                    if (extraBot.length > 0) {
-                                        console.log(`🟢 [BP] Found ${extraBot.length} extra msgs after 3s wait`);
                                     }
                                 }
                             } catch {}
-                            console.log(`🔵 [BP] Resolving, total recibidas=${recibidas}`);
                             resolve('');
                         }, 3000);
                         return;
