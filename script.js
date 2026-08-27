@@ -1041,37 +1041,47 @@ function saveClientToDB(clientData) {
 }
 
 function exportToExcel() {
-    if (clients.length === 0) {
+    const allClients = [...testClientes, ...clients];
+    if (allClients.length === 0) {
         showNotification('No hay datos para exportar');
         return;
     }
-    
-    const data = clients.map(c => ({
-        'Nombre': c.name,
-        'Cédula': c.cedula,
-        'Email': c.email,
-        'Teléfono': c.phone,
-        'Dirección': c.address,
-        'Total Compra': c.total,
+
+    // Deduplicar por cédula
+    const seen = new Set();
+    const unique = [];
+    for (const c of allClients) {
+        const key = c.cedula || c.doc;
+        if (!seen.has(key)) {
+            seen.add(key);
+            unique.push(c);
+        }
+    }
+
+    const data = unique.map(c => ({
+        'Nombre': c.nombre || c.name || '',
+        'Cédula': c.cedula || c.doc || '',
+        'Email': c.email || '',
+        'Teléfono': c.telefono || c.phone || '',
+        'Ciudad': c.ciudad || '',
+        'Dirección': c.direccion || c.address || '',
         'N° Pedidos': c.orders || 1,
-        'Fecha': c.date
+        'Total Compra': '$' + (c.total || 0).toLocaleString(),
+        'Fecha Registro': c.date || c.createdAt || ''
     }));
-    
+
     const ws = XLSX.utils.json_to_sheet(data);
-    
     ws['!cols'] = [
-        { wch: 25 }, { wch: 15 }, { wch: 30 },
-        { wch: 15 }, { wch: 30 }, { wch: 15 },
-        { wch: 12 }, { wch: 15 }
+        { wch: 28 }, { wch: 15 }, { wch: 32 }, { wch: 15 },
+        { wch: 15 }, { wch: 40 }, { wch: 12 }, { wch: 15 }, { wch: 15 }
     ];
-    
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Clientes');
-    
+
     const date = new Date().toISOString().split('T')[0];
-    XLSX.writeFile(wb, `Parrilla_IA_Clientes_${date}.xlsx`);
-    
-    showNotification('Archivo Excel exportado exitosamente');
+    XLSX.writeFile(wb, `Parrillero_Clientes_${date}.xlsx`);
+    showNotification(`${unique.length} clientes exportados exitosamente`);
 }
 
 function clearClients() {
