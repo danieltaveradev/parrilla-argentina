@@ -203,8 +203,53 @@ function initNavMenu() {
 
 function initForm() {
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('date').setAttribute('min', today);
+    const dateEl = document.getElementById('date');
+    dateEl.setAttribute('min', today);
+    dateEl.addEventListener('change', populateTimeOptions);
+    populateTimeOptions();
     document.getElementById('bookingForm').addEventListener('submit', handleFormSubmit);
+}
+
+function getRestaurantHours(dayOfWeek) {
+    const hours = {
+        0: { abre: 12, cierra: 20.5 },
+        1: { abre: 12, cierra: 21.5 },
+        2: { abre: 12, cierra: 21.5 },
+        3: { abre: 12, cierra: 21.5 },
+        4: { abre: 12, cierra: 22 },
+        5: { abre: 12, cierra: 23 },
+        6: { abre: 12, cierra: 23 }
+    };
+    return hours[dayOfWeek];
+}
+
+function decimalToHHMM(dec) {
+    const h = Math.floor(dec);
+    const m = Math.round((dec - h) * 60);
+    return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+}
+
+function populateTimeOptions() {
+    const dateEl = document.getElementById('date');
+    const timeEl = document.getElementById('time');
+    const selected = dateEl.value;
+    let sched;
+    if (selected) {
+        const d = new Date(selected + 'T12:00:00');
+        sched = getRestaurantHours(d.getDay());
+    } else {
+        sched = getRestaurantHours(new Date().getDay());
+    }
+    const prev = timeEl.value;
+    let opts = '';
+    for (let h = sched.abre; h < sched.cierra; h += 0.5) {
+        const val = decimalToHHMM(h);
+        opts += `<option value="${val}">${val}</option>`;
+    }
+    timeEl.innerHTML = opts;
+    if (prev && [...timeEl.options].some(o => o.value === prev)) {
+        timeEl.value = prev;
+    }
 }
 
 function initScrollEffects() {
@@ -698,19 +743,45 @@ function showOrderConfirmation(orderNum) {
 
 function handleFormSubmit(e) {
     e.preventDefault();
-    
+
+    const dateVal = document.getElementById('date').value;
+    const timeVal = document.getElementById('time').value;
+    const guestsVal = document.getElementById('guests').value;
+
+    if (!dateVal || !timeVal) {
+        showNotification('Selecciona fecha y hora');
+        return;
+    }
+
+    const selectedDate = new Date(dateVal + 'T12:00:00');
+    const sched = getRestaurantHours(selectedDate.getDay());
+    const [sh, sm] = timeVal.split(':').map(Number);
+    const horaDecimal = sh + sm / 60;
+
+    if (horaDecimal < sched.abre || horaDecimal >= sched.cierra) {
+        showNotification(`Horario no disponible. Abrimos de ${decimalToHHMM(sched.abre)} a ${decimalToHHMM(sched.cierra)}`);
+        return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+        showNotification('No se pueden hacer reservas en fechas pasadas');
+        return;
+    }
+
     const formData = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         phone: document.getElementById('phone').value,
-        date: document.getElementById('date').value,
-        time: document.getElementById('time').value,
-        guests: document.getElementById('guests').value,
+        date: dateVal,
+        time: timeVal,
+        guests: guestsVal,
         notes: document.getElementById('notes').value,
         items: selectedItems,
         total: selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
     };
-    
+
     sendToN8n({
         tipo: 'reserva',
         timestamp: new Date().toISOString(),
@@ -726,9 +797,10 @@ function handleFormSubmit(e) {
             Estado: 'Pendiente'
         }
     });
-    
+
     showConfirmation(formData);
     e.target.reset();
+    populateTimeOptions();
 }
 
 function showConfirmation(data) {
