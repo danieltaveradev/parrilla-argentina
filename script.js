@@ -1205,8 +1205,10 @@ function loadPedidosData() {
     if (!tbody) return;
     const filter = document.getElementById('pedidoFilter')?.value || 'all';
     const search = (document.getElementById('pedidoSearch')?.value || '').toLowerCase();
+    const today = new Date().toISOString().split('T')[0];
     let filtered = testPedidos;
-    if (filter !== 'all') filtered = filtered.filter(p => p.estado === filter);
+    if (filter === 'hoy') filtered = filtered.filter(p => p.fecha === today);
+    else if (filter !== 'all') filtered = filtered.filter(p => p.estado === filter);
     if (search) filtered = filtered.filter(p => p.nombre.toLowerCase().includes(search) || p.productos.toLowerCase().includes(search));
     document.getElementById('totalPedidos').textContent = testPedidos.length;
     document.getElementById('pedidosDomicilio').textContent = testPedidos.filter(p => p.modo === 'Domicilio').length;
