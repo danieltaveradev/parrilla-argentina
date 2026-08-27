@@ -128,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCounters();
     initPaymentMethods();
     loadCartFromStorage();
+    updateAdminBadges();
 });
 
 function initParticles() {
@@ -1266,6 +1267,17 @@ function loadReservasData() {
             </td>
         </tr>
     `).join('');
+    updateAdminBadges();
+}
+
+function updateAdminBadges() {
+    const today = new Date().toISOString().split('T')[0];
+    const reservasHoy = testReservas.filter(r => r.fecha === today).length;
+    const pedidosHoy = testPedidos.filter(p => p.fecha === today).length;
+    const rBadge = document.getElementById('reservasBadge');
+    const pBadge = document.getElementById('pedidosBadge');
+    if (rBadge) { rBadge.textContent = reservasHoy; rBadge.style.display = reservasHoy > 0 ? 'inline-flex' : 'none'; }
+    if (pBadge) { pBadge.textContent = pedidosHoy; pBadge.style.display = pedidosHoy > 0 ? 'inline-flex' : 'none'; }
 }
 
 function filterReservas() {
@@ -1302,6 +1314,7 @@ function loadPedidosData() {
             <td>${p.fecha}</td>
         </tr>
     `).join('');
+    updateAdminBadges();
 }
 
 function filterPedidos() {

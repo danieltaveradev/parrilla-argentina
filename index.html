@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Parrillero Argentino - Carnes a la Parrilla</title>
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=4">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -2201,9 +2201,11 @@ class="login-logo">
                 </button>
                 <button class="admin-tab" onclick="switchAdminTab('reservas')">
                     <i class="fas fa-calendar-check"></i> Reservas
+                    <span class="tab-badge" id="reservasBadge">0</span>
                 </button>
                 <button class="admin-tab" onclick="switchAdminTab('pedidos')">
                     <i class="fas fa-shopping-bag"></i> Pedidos
+                    <span class="tab-badge" id="pedidosBadge">0</span>
                 </button>
                 <button class="admin-tab" onclick="switchAdminTab('menu')">
                     <i class="fas fa-utensils"></i> Menú
@@ -2660,7 +2662,7 @@ class="login-logo">
         </div>
     </div>
 
-    <script src="script.js?v=16"></script>
+    <script src="script.js?v=17"></script>
     <script src="chatbot-reservas.js?v=7"></script>
 
     <!-- ============ CHATBOT ESTILO WHATSAPP ============ -->

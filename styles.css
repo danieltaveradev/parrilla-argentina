@@ -3891,6 +3891,27 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(198, 154, 69, 0.03);
 }
 
+.tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: #8F241C;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-left: 6px;
+    line-height: 1;
+}
+
+.tab-badge:empty,
+.tab-badge[data-count="0"] {
+    display: none;
+}
+
 .admin-panel {
     display: none;
     padding: 25px 30px;
