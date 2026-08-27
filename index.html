@@ -2096,6 +2096,9 @@ class="login-logo">
                 <button class="admin-tab" onclick="switchAdminTab('enviar')">
                     <i class="fas fa-envelope"></i> Enviar Ofertas
                 </button>
+                <button class="admin-tab" onclick="switchAdminTab('empleados')">
+                    <i class="fas fa-id-badge"></i> Empleados
+                </button>
             </div>
 
             <div class="admin-panel active" id="adminClientes">
@@ -2373,10 +2376,136 @@ class="login-logo">
                     </button>
                 </div>
             </div>
+
+            <div class="admin-panel" id="adminEmpleados">
+                <div class="admin-panel-header">
+                    <h3><i class="fas fa-id-badge"></i> Gestión de Empleados</h3>
+                    <div class="admin-actions">
+                        <button class="btn-add-offer" onclick="showEmployeeForm()">
+                            <i class="fas fa-user-plus"></i> Nuevo Empleado
+                        </button>
+                        <button class="btn-export" onclick="exportEmployeesToExcel()">
+                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-stats-row">
+                    <div class="stat-card"><i class="fas fa-users"></i><span id="totalEmpleados">0</span><small>Total</small></div>
+                    <div class="stat-card"><i class="fas fa-clock"></i><span id="empleadosActivos">0</span><small>Activos Hoy</small></div>
+                    <div class="stat-card"><i class="fas fa-briefcase"></i><span id="totalCargos">0</span><small>Cargos</small></div>
+                </div>
+
+                <div class="offer-form" id="employeeForm" style="display:none;">
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Nombre completo</label>
+                            <input type="text" id="empName" placeholder="Ej: Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> Cédula</label>
+                            <input type="text" id="empDoc" placeholder="Ej: 1234567890" required>
+                        </div>
+                    </div>
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label><i class="fas fa-user-tag"></i> Usuario (auto)</label>
+                            <div class="input-with-btn">
+                                <input type="text" id="empUsername" readonly placeholder="Se genera automáticamente">
+                                <button type="button" class="btn-mini" onclick="generateEmpUsername()"><i class="fas fa-sync-alt"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Contraseña (auto)</label>
+                            <div class="input-with-btn">
+                                <input type="text" id="empPassword" readonly placeholder="Se genera automáticamente">
+                                <button type="button" class="btn-mini" onclick="generateEmpPassword()"><i class="fas fa-sync-alt"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label><i class="fas fa-briefcase"></i> Cargo</label>
+                            <select id="empCargo">
+                                <option value="">Seleccionar cargo...</option>
+                                <option value="Mesero">Mesero</option>
+                                <option value="Cocinero">Cocinero</option>
+                                <option value="Barman">Barman</option>
+                                <option value="Ayudante de cocina">Ayudante de cocina</option>
+                                <option value="Cajero">Cajero</option>
+                                <option value="Recepcionista">Recepcionista</option>
+                                <option value="Líder de piso">Líder de piso</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Teléfono</label>
+                            <input type="tel" id="empPhone" placeholder="Ej: 300 555 0147">
+                        </div>
+                    </div>
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label><i class="fas fa-sign-in-alt"></i> Hora entrada</label>
+                            <input type="time" id="empEntry" value="08:00" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-sign-out-alt"></i> Hora salida</label>
+                            <input type="time" id="empExit" value="17:00" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Días laborales</label>
+                        <div class="days-checkboxes">
+                            <label class="day-check"><input type="checkbox" value="Lun" checked><span>Lun</span></label>
+                            <label class="day-check"><input type="checkbox" value="Mar" checked><span>Mar</span></label>
+                            <label class="day-check"><input type="checkbox" value="Mié" checked><span>Mié</span></label>
+                            <label class="day-check"><input type="checkbox" value="Jue" checked><span>Jue</span></label>
+                            <label class="day-check"><input type="checkbox" value="Vie" checked><span>Vie</span></label>
+                            <label class="day-check"><input type="checkbox" value="Sáb"><span>Sáb</span></label>
+                            <label class="day-check"><input type="checkbox" value="Dom"><span>Dom</span></label>
+                        </div>
+                    </div>
+                    <div class="offer-form-buttons">
+                        <button class="btn-save-offer" onclick="saveEmployee()">
+                            <i class="fas fa-save"></i> Guardar Empleado
+                        </button>
+                        <button class="btn-cancel-offer" onclick="hideEmployeeForm()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="empleadoSearch" placeholder="Buscar por nombre, cargo, usuario..." oninput="filterEmpleados()">
+                </div>
+
+                <div class="clients-table-container">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cédula</th>
+                                <th>Usuario</th>
+                                <th>Contraseña</th>
+                                <th>Cargo</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Horas/Día</th>
+                                <th>Días</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empleadosTableBody">
+                            <tr class="empty-row"><td colspan="10">No hay empleados registrados</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
     <script src="chatbot-reservas.js?v=4"></script>
 
     <!-- ============ CHATBOT ESTILO WHATSAPP ============ -->

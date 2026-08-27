@@ -911,6 +911,7 @@ function updateAdminPermissions() {
     const isAdmin = currentUser.role === 'admin';
     
     document.querySelectorAll('.admin-tab')[5].style.display = isAdmin ? 'flex' : 'none';
+    document.querySelectorAll('.admin-tab')[6].style.display = isAdmin ? 'flex' : 'none';
     
     const btnClear = document.querySelector('.btn-clear');
     if (btnClear) btnClear.style.display = isAdmin ? 'flex' : 'none';
@@ -1410,6 +1411,183 @@ function sendOffersToClients() {
             btn.disabled = false;
         }, 3000);
     });
+}
+
+// ============ GESTIÓN DE EMPLEADOS ============
+let empleados = JSON.parse(localStorage.getItem('parrillaEmpleados') || '[]');
+
+function generateEmpUsername() {
+    const name = document.getElementById('empName').value.trim();
+    if (!name) { showNotification('Escribe el nombre primero'); return; }
+    const parts = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/\s+/);
+    const base = parts[0].substring(0, 8);
+    const num = Math.floor(Math.random() * 900 + 100);
+    document.getElementById('empUsername').value = base + num;
+}
+
+function generateEmpPassword() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    let pass = '';
+    for (let i = 0; i < 10; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    document.getElementById('empPassword').value = pass;
+}
+
+function showEmployeeForm() {
+    const form = document.getElementById('employeeForm');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    if (form.style.display === 'block') {
+        generateEmpUsername();
+        generateEmpPassword();
+    }
+}
+
+function hideEmployeeForm() {
+    document.getElementById('employeeForm').style.display = 'none';
+    document.getElementById('employeeForm').querySelectorAll('input:not([readonly])').forEach(i => i.value = '');
+}
+
+function calcHoursWorked(entry, exit) {
+    const [eH, eM] = entry.split(':').map(Number);
+    const [xH, xM] = exit.split(':').map(Number);
+    let hours = (xH + xM / 60) - (eH + eM / 60);
+    if (hours < 0) hours += 24;
+    return Math.round(hours * 100) / 100;
+}
+
+function saveEmployee() {
+    const name = document.getElementById('empName').value.trim();
+    const doc = document.getElementById('empDoc').value.trim();
+    const username = document.getElementById('empUsername').value.trim();
+    const password = document.getElementById('empPassword').value.trim();
+    const cargo = document.getElementById('empCargo').value;
+    const phone = document.getElementById('empPhone').value.trim();
+    const entry = document.getElementById('empEntry').value;
+    const exit = document.getElementById('empExit').value;
+
+    if (!name || !doc || !username || !password || !cargo || !entry || !exit) {
+        showNotification('Completa todos los campos obligatorios');
+        return;
+    }
+
+    const days = [];
+    document.querySelectorAll('.day-check input:checked').forEach(cb => days.push(cb.value));
+
+    if (days.length === 0) {
+        showNotification('Selecciona al menos un día laboral');
+        return;
+    }
+
+    const hoursDay = calcHoursWorked(entry, exit);
+
+    const emp = {
+        id: Date.now(),
+        name, doc, username, password, cargo, phone,
+        entry, exit, days, hoursDay,
+        createdAt: new Date().toLocaleDateString('es-CO')
+    };
+
+    empleados.push(emp);
+    localStorage.setItem('parrillaEmpleados', JSON.stringify(empleados));
+    hideEmployeeForm();
+    loadEmpleadosData();
+    showNotification('Empleado "' + name + '" registrado. Usuario: ' + username + ' | Contraseña: ' + password);
+}
+
+function deleteEmployee(id) {
+    if (!confirm('¿Eliminar este empleado?')) return;
+    empleados = empleados.filter(e => e.id !== id);
+    localStorage.setItem('parrillaEmpleados', JSON.stringify(empleados));
+    loadEmpleadosData();
+    showNotification('Empleado eliminado');
+}
+
+function loadEmpleadosData() {
+    const tbody = document.getElementById('empleadosTableBody');
+    if (!tbody) return;
+
+    document.getElementById('totalEmpleados').textContent = empleados.length;
+
+    const cargos = [...new Set(empleados.map(e => e.cargo))];
+    document.getElementById('totalCargos').textContent = cargos.length;
+
+    const now = new Date();
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const today = dayNames[now.getDay()];
+    document.getElementById('empleadosActivos').textContent = empleados.filter(e => e.days.includes(today)).length;
+
+    const search = (document.getElementById('empleadoSearch')?.value || '').toLowerCase();
+    let filtered = empleados;
+    if (search) {
+        filtered = empleados.filter(e =>
+            e.name.toLowerCase().includes(search) ||
+            e.cargo.toLowerCase().includes(search) ||
+            e.username.toLowerCase().includes(search)
+        );
+    }
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="10">No se encontraron empleados</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(e => `
+        <tr>
+            <td>${e.name}</td>
+            <td>${e.doc}</td>
+            <td><code>${e.username}</code></td>
+            <td><code>${e.password}</code></td>
+            <td>${e.cargo}</td>
+            <td>${e.entry}</td>
+            <td>${e.exit}</td>
+            <td><strong>${e.hoursDay}h</strong></td>
+            <td>${e.days.join(', ')}</td>
+            <td>
+                <button class="btn-icon-delete" onclick="deleteEmployee(${e.id})" title="Eliminar">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterEmpleados() {
+    loadEmpleadosData();
+}
+
+function exportEmployeesToExcel() {
+    if (empleados.length === 0) {
+        showNotification('No hay empleados para exportar');
+        return;
+    }
+
+    const data = empleados.map(e => ({
+        'Nombre': e.name,
+        'Cédula': e.doc,
+        'Usuario': e.username,
+        'Contraseña': e.password,
+        'Cargo': e.cargo,
+        'Teléfono': e.phone || '',
+        'Hora Entrada': e.entry,
+        'Hora Salida': e.exit,
+        'Horas/Día': e.hoursDay,
+        'Horas/Semana': Math.round(e.hoursDay * e.days.length * 100) / 100,
+        'Días Laborales': e.days.join(', '),
+        'Fecha Ingreso': e.createdAt
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    ws['!cols'] = [
+        { wch: 25 }, { wch: 15 }, { wch: 18 }, { wch: 15 },
+        { wch: 18 }, { wch: 15 }, { wch: 12 }, { wch: 12 },
+        { wch: 10 }, { wch: 14 }, { wch: 22 }, { wch: 15 }
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Empleados');
+
+    const date = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(wb, `Parrillero_Empleados_${date}.xlsx`);
+    showNotification('Archivo Excel de empleados exportado');
 }
 
 // ============ CHATBOT ESTILO WHATSAPP ============
