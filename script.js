@@ -1639,9 +1639,10 @@ function sendOffersToClients() {
     
     let targetEmails = [];
     let targetNames = [];
+    const allClients = [...testClientes, ...clients];
     if (recipients === 'all') {
-        targetEmails = clients.map(c => c.email);
-        targetNames = clients.map(c => c.name);
+        targetEmails = allClients.map(c => c.email || '');
+        targetNames = allClients.map(c => c.nombre || c.name || '');
     } else {
         const checkboxes = document.querySelectorAll('#clientsCheckboxes input[type="checkbox"]:checked');
         targetEmails = Array.from(checkboxes).map(cb => clients[parseInt(cb.value)].email);
