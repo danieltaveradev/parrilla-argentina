@@ -4790,6 +4790,47 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
 }
 
+.actions-cell {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.btn-action-confirm,
+.btn-action-cancel {
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    font-size: 0.8rem;
+}
+
+.btn-action-confirm {
+    background: rgba(40, 167, 69, 0.15);
+    border: 1px solid #28a745;
+    color: #28a745;
+}
+
+.btn-action-confirm:hover {
+    background: #28a745;
+    color: white;
+}
+
+.btn-action-cancel {
+    background: rgba(220, 53, 69, 0.15);
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.btn-action-cancel:hover {
+    background: #dc3545;
+    color: white;
+}
+
 @media (max-width: 480px) {
     .form-row-2col {
         grid-template-columns: 1fr;

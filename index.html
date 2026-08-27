@@ -2162,6 +2162,9 @@ class="login-logo">
                             <option value="Confirmada">Confirmadas</option>
                             <option value="Cancelada">Canceladas</option>
                         </select>
+                        <button class="btn-export" onclick="exportReservasExcel()">
+                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        </button>
                     </div>
                 </div>
                 <div class="admin-stats-row">
@@ -2187,10 +2190,11 @@ class="login-logo">
                                 <th>Ubicación</th>
                                 <th>Ocasión</th>
                                 <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="reservasTableBody">
-                            <tr class="empty-row"><td colspan="9">No hay reservas registradas</td></tr>
+                            <tr class="empty-row"><td colspan="10">No hay reservas registradas</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -2206,6 +2210,9 @@ class="login-logo">
                             <option value="Confirmada">Confirmados</option>
                             <option value="Cancelada">Cancelados</option>
                         </select>
+                        <button class="btn-export" onclick="exportPedidosExcel()">
+                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        </button>
                     </div>
                 </div>
                 <div class="admin-stats-row">
@@ -2505,7 +2512,7 @@ class="login-logo">
         </div>
     </div>
 
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=7"></script>
     <script src="chatbot-reservas.js?v=4"></script>
 
     <!-- ============ CHATBOT ESTILO WHATSAPP ============ -->

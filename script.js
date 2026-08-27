@@ -1096,7 +1096,7 @@ function loadReservasData() {
     document.getElementById('reservasConfirmadas').textContent = testReservas.filter(r => r.estado === 'Confirmada').length;
     document.getElementById('reservasCanceladas').textContent = testReservas.filter(r => r.estado === 'Cancelada').length;
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr class="empty-row"><td colspan="9">No se encontraron reservas</td></tr>';
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="10">No se encontraron reservas</td></tr>';
         return;
     }
     tbody.innerHTML = filtered.map(r => `
@@ -1110,6 +1110,20 @@ function loadReservasData() {
             <td>${r.ubicacion}</td>
             <td>${r.ocasion}</td>
             <td><span class="status-badge status-${r.estado.toLowerCase()}">${r.estado}</span></td>
+            <td class="actions-cell">
+                ${r.estado === 'Pendiente' ? `
+                    <button class="btn-action-confirm" onclick="cambiarEstadoReserva(${r.id}, 'Confirmada')" title="Confirmar">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="btn-action-cancel" onclick="cambiarEstadoReserva(${r.id}, 'Cancelada')" title="Cancelar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                ` : r.estado === 'Confirmada' ? `
+                    <button class="btn-action-cancel" onclick="cambiarEstadoReserva(${r.id}, 'Cancelada')" title="Cancelar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                ` : ''}
+            </td>
         </tr>
     `).join('');
 }
@@ -1150,6 +1164,269 @@ function loadPedidosData() {
 
 function filterPedidos() {
     loadPedidosData();
+}
+
+// ============ CAMBIOS DE ESTADO RESERVAS ============
+let reservaChanges = JSON.parse(localStorage.getItem('parrillaReservaChanges') || '[]');
+
+function cambiarEstadoReserva(id, nuevoEstado) {
+    const r = testReservas.find(r => r.id === id);
+    if (!r) return;
+    const estadoAnterior = r.estado;
+    if (estadoAnterior === nuevoEstado) return;
+    r.estado = nuevoEstado;
+    reservaChanges.push({
+        reservaId: id,
+        nombre: r.nombre,
+        telefono: r.telefono,
+        fecha: r.fecha,
+        hora: r.hora,
+        estadoAnterior,
+        nuevoEstado,
+        fechaCambio: new Date().toLocaleString('es-CO')
+    });
+    localStorage.setItem('parrillaReservaChanges', JSON.stringify(reservaChanges));
+    loadReservasData();
+    showNotification(`Reserva #${id} cambiada de "${estadoAnterior}" a "${nuevoEstado}"`);
+}
+
+// ============ EXPORTAR PEDIDOS A EXCEL ============
+function exportPedidosExcel() {
+    if (testPedidos.length === 0) {
+        showNotification('No hay pedidos para exportar');
+        return;
+    }
+
+    const wb = XLSX.utils.book_new();
+
+    // Hoja 1: Todos los pedidos
+    const allData = testPedidos.map(p => ({
+        '#': p.id,
+        'Cliente': p.nombre,
+        'Teléfono': p.telefono,
+        'Modo': p.modo,
+        'Dirección': p.direccion || '',
+        'Productos': p.productos,
+        'Método Pago': p.metodoPago,
+        'Estado': p.estado,
+        'Fecha': p.fecha
+    }));
+    const wsAll = XLSX.utils.json_to_sheet(allData);
+    wsAll['!cols'] = [{ wch: 6 }, { wch: 25 }, { wch: 15 }, { wch: 12 }, { wch: 35 }, { wch: 45 }, { wch: 15 }, { wch: 12 }, { wch: 15 }];
+    XLSX.utils.book_append_sheet(wb, wsAll, 'Todos los Pedidos');
+
+    // Hoja 2: Ventas (solo confirmados/pagados)
+    const ventas = testPedidos.filter(p => p.estado === 'Confirmada');
+    const ventData = ventas.map(p => ({
+        '#': p.id,
+        'Cliente': p.nombre,
+        'Productos': p.productos,
+        'Método Pago': p.metodoPago,
+        'Modo': p.modo,
+        'Fecha': p.fecha
+    }));
+    const wsVentas = XLSX.utils.json_to_sheet(ventData.length > 0 ? ventData : [{ 'Info': 'No hay ventas confirmadas' }]);
+    wsVentas['!cols'] = [{ wch: 6 }, { wch: 25 }, { wch: 45 }, { wch: 15 }, { wch: 12 }, { wch: 15 }];
+    XLSX.utils.book_append_sheet(wb, wsVentas, 'Ventas');
+
+    // Hoja 3: Domicilios
+    const domicilios = testPedidos.filter(p => p.modo === 'Domicilio');
+    const domData = domicilios.map(p => ({
+        '#': p.id,
+        'Cliente': p.nombre,
+        'Teléfono': p.telefono,
+        'Dirección': p.direccion || '',
+        'Productos': p.productos,
+        'Estado': p.estado,
+        'Fecha': p.fecha
+    }));
+    const wsDom = XLSX.utils.json_to_sheet(domData.length > 0 ? domData : [{ 'Info': 'No hay domicilios' }]);
+    wsDom['!cols'] = [{ wch: 6 }, { wch: 25 }, { wch: 15 }, { wch: 35 }, { wch: 45 }, { wch: 12 }, { wch: 15 }];
+    XLSX.utils.book_append_sheet(wb, wsDom, 'Domicilios');
+
+    // Hoja 4: Métodos de pago (resumen)
+    const metodos = {};
+    testPedidos.forEach(p => {
+        if (!metodos[p.metodoPago]) metodos[p.metodoPago] = { total: 0, confirmados: 0, pendientes: 0, cancelados: 0 };
+        metodos[p.metodoPago].total++;
+        if (p.estado === 'Confirmada') metodos[p.metodoPago].confirmados++;
+        else if (p.estado === 'Pendiente') metodos[p.metodoPago].pendientes++;
+        else if (p.estado === 'Cancelada') metodos[p.metodoPago].cancelados++;
+    });
+    const metodosData = Object.entries(metodos).map(([metodo, stats]) => ({
+        'Método de Pago': metodo,
+        'Total Pedidos': stats.total,
+        'Confirmados': stats.confirmados,
+        'Pendientes': stats.pendientes,
+        'Cancelados': stats.cancelados
+    }));
+    const wsMetodos = XLSX.utils.json_to_sheet(metodosData);
+    wsMetodos['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 14 }, { wch: 12 }, { wch: 12 }];
+    XLSX.utils.book_append_sheet(wb, wsMetodos, 'Métodos de Pago');
+
+    // Hoja 5: Pagos pendientes
+    const pendientes = testPedidos.filter(p => p.estado === 'Pendiente');
+    const pendData = pendientes.map(p => ({
+        '#': p.id,
+        'Cliente': p.nombre,
+        'Teléfono': p.telefono,
+        'Productos': p.productos,
+        'Método Pago': p.metodoPago,
+        'Modo': p.modo,
+        'Fecha': p.fecha
+    }));
+    const wsPend = XLSX.utils.json_to_sheet(pendData.length > 0 ? pendData : [{ 'Info': 'No hay pagos pendientes' }]);
+    wsPend['!cols'] = [{ wch: 6 }, { wch: 25 }, { wch: 15 }, { wch: 45 }, { wch: 15 }, { wch: 12 }, { wch: 15 }];
+    XLSX.utils.book_append_sheet(wb, wsPend, 'Pagos Pendientes');
+
+    // Hoja 6: Cancelaciones (pedidos + reservas)
+    const cancelPedidos = testPedidos.filter(p => p.estado === 'Cancelada').map(p => ({
+        'Tipo': 'Pedido',
+        '#': p.id,
+        'Cliente': p.nombre,
+        'Teléfono': p.telefono,
+        'Detalle': p.productos,
+        'Fecha Original': p.fecha
+    }));
+    const cancelReservas = testReservas.filter(r => r.estado === 'Cancelada').map(r => ({
+        'Tipo': 'Reserva',
+        '#': r.id,
+        'Cliente': r.nombre,
+        'Teléfono': r.telefono,
+        'Detalle': `${r.fecha} ${r.hora} - ${r.personas} personas (${r.ubicacion})`,
+        'Fecha Original': r.fecha
+    }));
+    const cancelAll = [...cancelPedidos, ...cancelReservas];
+    const wsCancel = XLSX.utils.json_to_sheet(cancelAll.length > 0 ? cancelAll : [{ 'Info': 'No hay cancelaciones' }]);
+    wsCancel['!cols'] = [{ wch: 10 }, { wch: 6 }, { wch: 25 }, { wch: 15 }, { wch: 50 }, { wch: 15 }];
+    XLSX.utils.book_append_sheet(wb, wsCancel, 'Cancelaciones');
+
+    // Hoja 7: Cambios de reserva
+    if (reservaChanges.length > 0) {
+        const changesData = reservaChanges.map(c => ({
+            'Reserva #': c.reservaId,
+            'Cliente': c.nombre,
+            'Teléfono': c.telefono,
+            'Fecha Reserva': c.fecha,
+            'Hora': c.hora,
+            'Estado Anterior': c.estadoAnterior,
+            'Nuevo Estado': c.nuevoEstado,
+            'Fecha del Cambio': c.fechaCambio
+        }));
+        const wsChanges = XLSX.utils.json_to_sheet(changesData);
+        wsChanges['!cols'] = [{ wch: 10 }, { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 8 }, { wch: 15 }, { wch: 15 }, { wch: 22 }];
+        XLSX.utils.book_append_sheet(wb, wsChanges, 'Cambios de Reserva');
+    }
+
+    // Hoja 8: Resumen
+    const resumen = [
+        { 'Concepto': 'Total Pedidos', 'Cantidad': testPedidos.length },
+        { 'Concepto': 'Pedidos Confirmados', 'Cantidad': testPedidos.filter(p => p.estado === 'Confirmada').length },
+        { 'Concepto': 'Pedidos Pendientes', 'Cantidad': pendientes.length },
+        { 'Concepto': 'Pedidos Cancelados', 'Cantidad': testPedidos.filter(p => p.estado === 'Cancelada').length },
+        { 'Concepto': 'Domicilios', 'Cantidad': domicilios.length },
+        { 'Concepto': 'Recogidas', 'Cantidad': testPedidos.filter(p => p.modo === 'Recogida').length },
+        { 'Concepto': '', 'Cantidad': '' },
+        { 'Concepto': 'Total Reservas', 'Cantidad': testReservas.length },
+        { 'Concepto': 'Reservas Confirmadas', 'Cantidad': testReservas.filter(r => r.estado === 'Confirmada').length },
+        { 'Concepto': 'Reservas Pendientes', 'Cantidad': testReservas.filter(r => r.estado === 'Pendiente').length },
+        { 'Concepto': 'Reservas Canceladas', 'Cantidad': testReservas.filter(r => r.estado === 'Cancelada').length },
+        { 'Concepto': 'Cambios de Reserva Registrados', 'Cantidad': reservaChanges.length },
+    ];
+    const wsRes = XLSX.utils.json_to_sheet(resumen);
+    wsRes['!cols'] = [{ wch: 35 }, { wch: 12 }];
+    XLSX.utils.book_append_sheet(wb, wsRes, 'Resumen');
+
+    const date = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(wb, `Parrillero_Pedidos_${date}.xlsx`);
+    showNotification('Excel de pedidos exportado (8 hojas)');
+}
+
+// ============ EXPORTAR RESERVAS A EXCEL ============
+function exportReservasExcel() {
+    if (testReservas.length === 0) {
+        showNotification('No hay reservas para exportar');
+        return;
+    }
+
+    const wb = XLSX.utils.book_new();
+
+    // Hoja 1: Todas las reservas
+    const allData = testReservas.map(r => ({
+        '#': r.id,
+        'Cliente': r.nombre,
+        'Teléfono': r.telefono,
+        'Email': r.email || '',
+        'Fecha': r.fecha,
+        'Hora': r.hora,
+        'Personas': r.personas,
+        'Ubicación': r.ubicacion,
+        'Ocasión': r.ocasion,
+        'Estado': r.estado
+    }));
+    const wsAll = XLSX.utils.json_to_sheet(allData);
+    wsAll['!cols'] = [{ wch: 6 }, { wch: 25 }, { wch: 15 }, { wch: 30 }, { wch: 15 }, { wch: 8 }, { wch: 10 }, { wch: 12 }, { wch: 20 }, { wch: 12 }];
+    XLSX.utils.book_append_sheet(wb, wsAll, 'Todas las Reservas');
+
+    // Hoja 2: Confirmadas
+    const confirmadas = testReservas.filter(r => r.estado === 'Confirmada').map(r => ({
+        '#': r.id, 'Cliente': r.nombre, 'Teléfono': r.telefono,
+        'Fecha': r.fecha, 'Hora': r.hora, 'Personas': r.personas,
+        'Ubicación': r.ubicacion, 'Ocasión': r.ocasion
+    }));
+    const wsConf = XLSX.utils.json_to_sheet(confirmadas.length > 0 ? confirmadas : [{ 'Info': 'No hay reservas confirmadas' }]);
+    wsConf['!cols'] = [{ wch: 6 }, { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 8 }, { wch: 10 }, { wch: 12 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(wb, wsConf, 'Confirmadas');
+
+    // Hoja 3: Pendientes
+    const pendientes = testReservas.filter(r => r.estado === 'Pendiente').map(r => ({
+        '#': r.id, 'Cliente': r.nombre, 'Teléfono': r.telefono,
+        'Fecha': r.fecha, 'Hora': r.hora, 'Personas': r.personas,
+        'Ubicación': r.ubicacion
+    }));
+    const wsPend = XLSX.utils.json_to_sheet(pendientes.length > 0 ? pendientes : [{ 'Info': 'No hay reservas pendientes' }]);
+    XLSX.utils.book_append_sheet(wb, wsPend, 'Pendientes');
+
+    // Hoja 4: Canceladas
+    const canceladas = testReservas.filter(r => r.estado === 'Cancelada').map(r => ({
+        '#': r.id, 'Cliente': r.nombre, 'Teléfono': r.telefono,
+        'Fecha': r.fecha, 'Hora': r.hora, 'Personas': r.personas
+    }));
+    const wsCanc = XLSX.utils.json_to_sheet(canceladas.length > 0 ? canceladas : [{ 'Info': 'No hay reservas canceladas' }]);
+    XLSX.utils.book_append_sheet(wb, wsCanc, 'Canceladas');
+
+    // Hoja 5: Cambios registrados
+    if (reservaChanges.length > 0) {
+        const changesData = reservaChanges.map(c => ({
+            'Reserva #': c.reservaId,
+            'Cliente': c.nombre,
+            'Teléfono': c.telefono,
+            'Fecha Reserva': c.fecha,
+            'Hora': c.hora,
+            'Estado Anterior': c.estadoAnterior,
+            'Nuevo Estado': c.nuevoEstado,
+            'Fecha del Cambio': c.fechaCambio
+        }));
+        const wsChanges = XLSX.utils.json_to_sheet(changesData);
+        wsChanges['!cols'] = [{ wch: 10 }, { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 8 }, { wch: 15 }, { wch: 15 }, { wch: 22 }];
+        XLSX.utils.book_append_sheet(wb, wsChanges, 'Cambios');
+    }
+
+    // Hoja 6: Resumen
+    const resumen = [
+        { 'Concepto': 'Total Reservas', 'Cantidad': testReservas.length },
+        { 'Concepto': 'Confirmadas', 'Cantidad': testReservas.filter(r => r.estado === 'Confirmada').length },
+        { 'Concepto': 'Pendientes', 'Cantidad': testReservas.filter(r => r.estado === 'Pendiente').length },
+        { 'Concepto': 'Canceladas', 'Cantidad': testReservas.filter(r => r.estado === 'Cancelada').length },
+        { 'Concepto': 'Cambios Registrados', 'Cantidad': reservaChanges.length },
+    ];
+    const wsRes = XLSX.utils.json_to_sheet(resumen);
+    wsRes['!cols'] = [{ wch: 25 }, { wch: 12 }];
+    XLSX.utils.book_append_sheet(wb, wsRes, 'Resumen');
+
+    const date = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(wb, `Parrillero_Reservas_${date}.xlsx`);
+    showNotification('Excel de reservas exportado (6 hojas)');
 }
 
 function loadMenuData() {
