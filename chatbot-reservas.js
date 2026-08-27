@@ -180,6 +180,13 @@ function horaAHora24(hFloat) {
 }
 
 async function guardarReservaChat(data) {
+    if (data.fecha && data.hora != null) {
+        const sched = HORARIO_SERVICIO[data.fecha.getDay()];
+        if (sched && (data.hora < sched.abre || data.hora >= sched.cierra)) {
+            return { ok: false, motivo: `Horario fuera de servicio. Atendemos de ${formatearHora(sched.abre)} a ${formatearHora(sched.cierra)}.` };
+        }
+    }
+
     chatReservas.push(data);
     localStorage.setItem('parrillaChatReservas', JSON.stringify(chatReservas));
 
@@ -344,7 +351,7 @@ async function procesarFlujoReserva(texto) {
         }
         case 'confirmar': {
             if (/\b(si|sí|claro|correcto|ok|perfecto|listo|dale|confirmo|confirma)\b/.test(t)) {
-                await guardarReservaChat({
+                const result = await guardarReservaChat({
                     nombre: d.nombre,
                     email: d.email || '',
                     telefono: d.telefono,
@@ -354,6 +361,10 @@ async function procesarFlujoReserva(texto) {
                     ubicacion: d.ubicacion || 'Local',
                     celebracion: d.celebracion || 'Ninguna'
                 });
+                if (result && result.ok === false) {
+                    chatFlow.step = 'hora';
+                    return result.motivo;
+                }
                 const ubic = d.ubicacion && d.ubicacion !== 'Local' ? `\n🏠 Sala: **${d.ubicacion}**` : '';
                 const celeb = d.celebracion && d.celebracion !== 'Ninguna' ? `\n🎉 Ocasión: **${d.celebracion}**` : '';
                 chatFlow = { active:false, step:null, data:{} };
