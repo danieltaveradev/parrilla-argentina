@@ -1692,6 +1692,38 @@ function sendOffersToClients() {
 
 // ============ GESTIÓN DE EMPLEADOS ============
 let empleados = JSON.parse(localStorage.getItem('parrillaEmpleados') || '[]');
+let currentOvertimeEmpId = null;
+
+function generateTestEmployees() {
+    if (empleados.length > 0) return;
+    const testEmps = [
+        { name: 'Carlos Méndez', doc: '1023456789', cargo: 'Cocinero', phone: '310 456 7890', entry: '06:00', exit: '15:00', days: ['Lun','Mar','Mié','Jue','Vie'], horasExtras: 12.5 },
+        { name: 'María Fernanda López', doc: '1034567890', cargo: 'Mesero', phone: '311 567 8901', entry: '11:00', exit: '20:00', days: ['Lun','Mar','Mié','Jue','Vie','Sáb'], horasExtras: 8 },
+        { name: 'Andrés Felipe Ruiz', doc: '1045678901', cargo: 'Barman', phone: '312 678 9012', entry: '14:00', exit: '23:00', days: ['Jue','Vie','Sáb'], horasExtras: 15.5 },
+        { name: 'Laura Camila Rodríguez', doc: '1056789012', cargo: 'Cajero', phone: '313 789 0123', entry: '10:00', exit: '19:00', days: ['Lun','Mar','Mié','Jue','Vie'], horasExtras: 4 },
+        { name: 'Sebastián Ospina', doc: '1067890123', cargo: 'Ayudante de cocina', phone: '314 890 1234', entry: '07:00', exit: '16:00', days: ['Lun','Mar','Mié','Jue','Vie'], horasExtras: 6.5 },
+        { name: 'Valentina García', doc: '1078901234', cargo: 'Mesero', phone: '315 901 2345', entry: '12:00', exit: '21:00', days: ['Vie','Sáb','Dom'], horasExtras: 3 },
+        { name: 'Diego Alejandro Moreno', doc: '1089012345', cargo: 'Líder de piso', phone: '316 012 3456', entry: '09:00', exit: '18:00', days: ['Lun','Mar','Mié','Jue','Vie'], horasExtras: 10 },
+        { name: 'Daniela Alejandra Torres', doc: '1090123456', cargo: 'Recepcionista', phone: '317 123 4567', entry: '10:00', exit: '19:00', days: ['Lun','Mié','Vie','Sáb'], horasExtras: 2 },
+    ];
+    testEmps.forEach(e => {
+        empleados.push({
+            id: Date.now() + Math.floor(Math.random() * 99999),
+            ...e,
+            username: e.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/\s+/)[0] + Math.floor(Math.random()*900+100),
+            password: Math.random().toString(36).substring(2,12),
+            hoursDay: calcHoursWorked(e.entry, e.exit),
+            horasExtrasLog: [
+                { date: '2026-08-20', hours: e.horasExtras * 0.4, reason: 'Cubrir turno extra' },
+                { date: '2026-08-22', hours: e.horasExtras * 0.3, reason: 'Evento especial' },
+                { date: '2026-08-24', hours: e.horasExtras * 0.3, reason: 'Falta de personal' },
+            ],
+            createdAt: '24/08/2026'
+        });
+    });
+    localStorage.setItem('parrillaEmpleados', JSON.stringify(empleados));
+}
+generateTestEmployees();
 
 function generateEmpUsername() {
     const name = document.getElementById('empName').value.trim();
@@ -1760,6 +1792,8 @@ function saveEmployee() {
         id: Date.now(),
         name, doc, username, password, cargo, phone,
         entry, exit, days, hoursDay,
+        horasExtras: 0,
+        horasExtrasLog: [],
         createdAt: new Date().toLocaleDateString('es-CO')
     };
 
@@ -1778,6 +1812,51 @@ function deleteEmployee(id) {
     showNotification('Empleado eliminado');
 }
 
+// ============ HORAS EXTRAS ============
+function addOvertime(empId) {
+    currentOvertimeEmpId = empId;
+    const emp = empleados.find(e => e.id === empId);
+    if (!emp) return;
+
+    document.getElementById('overtimeEmpInfo').innerHTML = `
+        <strong>${emp.name}</strong> — ${emp.cargo}<br>
+        <small>Horas extras acumuladas: <b>${emp.horasExtras || 0}h</b></small>
+    `;
+    document.getElementById('otDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('otHours').value = '';
+    document.getElementById('otReason').value = '';
+    document.getElementById('overtimeModal').style.display = 'flex';
+}
+
+function closeOvertimeModal() {
+    document.getElementById('overtimeModal').style.display = 'none';
+    currentOvertimeEmpId = null;
+}
+
+function confirmOvertime() {
+    if (!currentOvertimeEmpId) return;
+    const emp = empleados.find(e => e.id === currentOvertimeEmpId);
+    if (!emp) return;
+
+    const date = document.getElementById('otDate').value;
+    const hours = parseFloat(document.getElementById('otHours').value);
+    const reason = document.getElementById('otReason').value.trim() || 'Sin motivo';
+
+    if (!date || !hours || hours <= 0) {
+        showNotification('Completa fecha y horas correctamente');
+        return;
+    }
+
+    emp.horasExtras = (emp.horasExtras || 0) + hours;
+    if (!emp.horasExtrasLog) emp.horasExtrasLog = [];
+    emp.horasExtrasLog.push({ date, hours, reason });
+
+    localStorage.setItem('parrillaEmpleados', JSON.stringify(empleados));
+    closeOvertimeModal();
+    loadEmpleadosData();
+    showNotification(`+${hours}h extras registradas para ${emp.name}. Total: ${emp.horasExtras}h`);
+}
+
 function loadEmpleadosData() {
     const tbody = document.getElementById('empleadosTableBody');
     if (!tbody) return;
@@ -1792,13 +1871,17 @@ function loadEmpleadosData() {
     const today = dayNames[now.getDay()];
     document.getElementById('empleadosActivos').textContent = empleados.filter(e => e.days.includes(today)).length;
 
+    const totalOT = empleados.reduce((sum, e) => sum + (e.horasExtras || 0), 0);
+    document.getElementById('totalHorasExtras').textContent = totalOT + 'h';
+
     const search = (document.getElementById('empleadoSearch')?.value || '').toLowerCase();
     let filtered = empleados;
     if (search) {
         filtered = empleados.filter(e =>
             e.name.toLowerCase().includes(search) ||
             e.cargo.toLowerCase().includes(search) ||
-            e.username.toLowerCase().includes(search)
+            e.username.toLowerCase().includes(search) ||
+            (e.phone || '').includes(search)
         );
     }
 
@@ -1811,14 +1894,19 @@ function loadEmpleadosData() {
         <tr>
             <td>${e.name}</td>
             <td>${e.doc}</td>
-            <td><code>${e.username}</code></td>
-            <td><code>${e.password}</code></td>
             <td>${e.cargo}</td>
+            <td>${e.phone || '-'}</td>
             <td>${e.entry}</td>
             <td>${e.exit}</td>
             <td><strong>${e.hoursDay}h</strong></td>
-            <td>${e.days.join(', ')}</td>
             <td>
+                <span class="overtime-badge">${e.horasExtras || 0}h</span>
+                <button class="btn-add-overtime" onclick="addOvertime(${e.id})" title="Agregar horas extras">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </td>
+            <td><small>${e.days.join(', ')}</small></td>
+            <td class="actions-cell">
                 <button class="btn-icon-delete" onclick="deleteEmployee(${e.id})" title="Eliminar">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -1837,34 +1925,68 @@ function exportEmployeesToExcel() {
         return;
     }
 
+    const wb = XLSX.utils.book_new();
+
+    // Hoja 1: Empleados
     const data = empleados.map(e => ({
         'Nombre': e.name,
         'Cédula': e.doc,
         'Usuario': e.username,
         'Contraseña': e.password,
         'Cargo': e.cargo,
-        'Teléfono': e.phone || '',
+        'Celular': e.phone || '',
         'Hora Entrada': e.entry,
         'Hora Salida': e.exit,
         'Horas/Día': e.hoursDay,
         'Horas/Semana': Math.round(e.hoursDay * e.days.length * 100) / 100,
+        'H. Extras Acumuladas': e.horasExtras || 0,
         'Días Laborales': e.days.join(', '),
         'Fecha Ingreso': e.createdAt
     }));
-
     const ws = XLSX.utils.json_to_sheet(data);
     ws['!cols'] = [
         { wch: 25 }, { wch: 15 }, { wch: 18 }, { wch: 15 },
         { wch: 18 }, { wch: 15 }, { wch: 12 }, { wch: 12 },
-        { wch: 10 }, { wch: 14 }, { wch: 22 }, { wch: 15 }
+        { wch: 10 }, { wch: 14 }, { wch: 18 }, { wch: 22 }, { wch: 15 }
     ];
-
-    const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Empleados');
+
+    // Hoja 2: Detalle horas extras
+    const otRows = [];
+    empleados.forEach(e => {
+        if (e.horasExtrasLog && e.horasExtrasLog.length > 0) {
+            e.horasExtrasLog.forEach(ot => {
+                otRows.push({
+                    'Empleado': e.name,
+                    'Cédula': e.doc,
+                    'Cargo': e.cargo,
+                    'Fecha': ot.date,
+                    'Horas': ot.hours,
+                    'Motivo': ot.reason
+                });
+            });
+        }
+    });
+    if (otRows.length > 0) {
+        const wsOT = XLSX.utils.json_to_sheet(otRows);
+        wsOT['!cols'] = [{ wch: 25 }, { wch: 15 }, { wch: 18 }, { wch: 15 }, { wch: 8 }, { wch: 30 }];
+        XLSX.utils.book_append_sheet(wb, wsOT, 'Horas Extras Detalle');
+    }
+
+    // Hoja 3: Resumen
+    const resumen = [
+        { 'Concepto': 'Total Empleados', 'Valor': empleados.length },
+        { 'Concepto': 'Cargos', 'Valor': [...new Set(empleados.map(e => e.cargo))].join(', ') },
+        { 'Concepto': 'Total Horas Extras Acumuladas', 'Valor': empleados.reduce((s, e) => s + (e.horasExtras || 0), 0) + 'h' },
+        { 'Concepto': 'Promedio Horas Extras/Empleado', 'Valor': (empleados.reduce((s, e) => s + (e.horasExtras || 0), 0) / (empleados.length || 1)).toFixed(1) + 'h' },
+    ];
+    const wsRes = XLSX.utils.json_to_sheet(resumen);
+    wsRes['!cols'] = [{ wch: 35 }, { wch: 40 }];
+    XLSX.utils.book_append_sheet(wb, wsRes, 'Resumen');
 
     const date = new Date().toISOString().split('T')[0];
     XLSX.writeFile(wb, `Parrillero_Empleados_${date}.xlsx`);
-    showNotification('Archivo Excel de empleados exportado');
+    showNotification('Excel de empleados exportado (3 hojas)');
 }
 
 // ============ CHATBOT ESTILO WHATSAPP ============

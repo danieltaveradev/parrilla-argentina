@@ -2401,6 +2401,7 @@ class="login-logo">
                     <div class="stat-card"><i class="fas fa-users"></i><span id="totalEmpleados">0</span><small>Total</small></div>
                     <div class="stat-card"><i class="fas fa-clock"></i><span id="empleadosActivos">0</span><small>Activos Hoy</small></div>
                     <div class="stat-card"><i class="fas fa-briefcase"></i><span id="totalCargos">0</span><small>Cargos</small></div>
+                    <div class="stat-card"><i class="fas fa-hourglass-half"></i><span id="totalHorasExtras">0h</span><small>H. Extras Totales</small></div>
                 </div>
 
                 <div class="offer-form" id="employeeForm" style="display:none;">
@@ -2493,12 +2494,12 @@ class="login-logo">
                             <tr>
                                 <th>Nombre</th>
                                 <th>Cédula</th>
-                                <th>Usuario</th>
-                                <th>Contraseña</th>
                                 <th>Cargo</th>
+                                <th>Celular</th>
                                 <th>Entrada</th>
                                 <th>Salida</th>
                                 <th>Horas/Día</th>
+                                <th>H. Extras</th>
                                 <th>Días</th>
                                 <th>Acciones</th>
                             </tr>
@@ -2508,11 +2509,38 @@ class="login-logo">
                         </tbody>
                     </table>
                 </div>
+
+                <div class="overtime-modal" id="overtimeModal" style="display:none;">
+                    <div class="overtime-modal-content">
+                        <h4><i class="fas fa-hourglass-half"></i> Registrar Horas Extras</h4>
+                        <div class="overtime-emp-info" id="overtimeEmpInfo"></div>
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <input type="date" id="otDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Horas extras</label>
+                            <input type="number" id="otHours" min="0.5" max="12" step="0.5" placeholder="Ej: 2.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Motivo</label>
+                            <input type="text" id="otReason" placeholder="Ej: Cubrir turno extra">
+                        </div>
+                        <div class="offer-form-buttons">
+                            <button class="btn-save-offer" onclick="confirmOvertime()">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <button class="btn-cancel-offer" onclick="closeOvertimeModal()">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js?v=7"></script>
+    <script src="script.js?v=8"></script>
     <script src="chatbot-reservas.js?v=4"></script>
 
     <!-- ============ CHATBOT ESTILO WHATSAPP ============ -->
