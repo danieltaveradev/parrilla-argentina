@@ -205,8 +205,12 @@ async function guardarReservaChat(data) {
                 }
             })
         });
+    } catch (e) {
+        console.warn('⚠️ n8n reserva sheet:', e.message);
+    }
 
-        if (typeof sendToN8n === 'function' && data.email) {
+    if (typeof sendToN8n === 'function' && data.email) {
+        try {
             await sendToN8n({
                 tipo: 'reserva_confirmada',
                 reserva: {
@@ -220,9 +224,9 @@ async function guardarReservaChat(data) {
                     celebracion: data.celebracion || 'Ninguna'
                 }
             });
+        } catch (e) {
+            console.warn('⚠️ n8n reserva email:', e.message);
         }
-    } catch (e) {
-        console.warn('⚠️ n8n reserva:', e.message);
     }
 }
 

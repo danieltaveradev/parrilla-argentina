@@ -596,19 +596,15 @@ function sendInvoice() {
     payload.factura.cliente.email = email;
 
     sendToN8n(payload).then(ok => {
-        btn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado!';
-        btn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
-        showNotification(`Factura enviada a ${email}`);
-
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Factura';
-            btn.style.background = '';
-            btn.disabled = false;
-        }, 3000);
-    }).catch(() => {
-        btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
-        btn.style.background = 'linear-gradient(135deg, #dc3545, #e74c3c)';
-        showNotification('Error al enviar factura. Intenta de nuevo.');
+        if (ok) {
+            btn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado!';
+            btn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            showNotification(`Factura enviada a ${email}`);
+        } else {
+            btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+            btn.style.background = 'linear-gradient(135deg, #dc3545, #e74c3c)';
+            showNotification('Error al enviar factura. Intenta de nuevo.');
+        }
         setTimeout(() => {
             btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Factura';
             btn.style.background = '';
@@ -639,9 +635,12 @@ function confirmOrder() {
     };
     
     saveClientToDB(clientData);
-    
+
+    const ts = new Date().toISOString();
+
     sendToN8n({
         tipo: 'pedido',
+        timestamp: ts,
         datos: {
             Nombre: clientData.name,
             Telefono: clientData.phone,
@@ -656,6 +655,7 @@ function confirmOrder() {
 
     const invoicePayload = buildInvoicePayload();
     invoicePayload.factura.cliente.email = clientData.email;
+    invoicePayload.timestamp = ts;
     sendToN8n(invoicePayload);
     
     setTimeout(() => {
@@ -713,6 +713,7 @@ function handleFormSubmit(e) {
     
     sendToN8n({
         tipo: 'reserva',
+        timestamp: new Date().toISOString(),
         datos: {
             Nombre: formData.name,
             Email: formData.email,
