@@ -2254,6 +2254,83 @@ function hideQuickReplies() {
     if (qr) qr.style.display = 'none';
 }
 
+// ============ PRODUCTOS DESTACADOS CAROUSEL ============
+let currentSlide = 0;
+let carouselInterval = null;
+const carouselImages = [
+    'galeria%20pagina%20web/parrilla/corte%20parrillero.png',
+    'galeria%20pagina%20web/parrilla/Picada%20del%20Parrillero.png',
+    'galeria%20pagina%20web/parrilla/chori%20de%20la%20casa.png',
+    'galeria%20pagina%20web/parrilla/chicharron%20a%20las%20brasas.png',
+    'galeria%20pagina%20web/parrilla/costilla%20del%20fuego.jfif',
+    'galeria%20pagina%20web/parrilla/chicharron%20a%20las%20brasas.png'
+];
+
+function initCarousel() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    if (slides.length === 0) return;
+
+    // Create dots
+    const dotsContainer = document.getElementById('carouselDots');
+    if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    startCarousel();
+}
+
+function goToSlide(index) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    const bg = document.querySelector('.featured-bg');
+
+    slides[currentSlide]?.classList.remove('active');
+    dots[currentSlide]?.classList.remove('active');
+
+    currentSlide = index;
+
+    slides[currentSlide]?.classList.add('active');
+    dots[currentSlide]?.classList.add('active');
+
+    // Change background blur image
+    if (bg && carouselImages[currentSlide]) {
+        bg.style.backgroundImage = `url('${carouselImages[currentSlide]}')`;
+    }
+}
+
+function moveCarousel(dir) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const total = slides.length;
+    let next = currentSlide + dir;
+    if (next < 0) next = total - 1;
+    if (next >= total) next = 0;
+    goToSlide(next);
+    resetCarouselTimer();
+}
+
+function startCarousel() {
+    if (carouselInterval) clearInterval(carouselInterval);
+    carouselInterval = setInterval(() => moveCarousel(1), 5000);
+}
+
+function resetCarouselTimer() {
+    clearInterval(carouselInterval);
+    startCarousel();
+}
+
+// Init carousel when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCarousel);
+} else {
+    initCarousel();
+}
+
 // Badge de notificación al cargar
 document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('chatWidget');
