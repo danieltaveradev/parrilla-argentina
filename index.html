@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Parrillero Argentino - Carnes a la Parrilla</title>
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="styles.css?v=6">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -2297,6 +2297,11 @@ class="login-logo">
                     <div class="stat-card"><i class="fas fa-check-circle"></i><span id="reservasConfirmadas">0</span><small>Confirmadas</small></div>
                     <div class="stat-card"><i class="fas fa-times-circle"></i><span id="reservasCanceladas">0</span><small>Canceladas</small></div>
                 </div>
+                <div class="tables-section">
+                    <h4><i class="fas fa-chair"></i> Estado de Mesas</h4>
+                    <div class="tables-grid" id="tablesGrid"></div>
+                    <div class="tables-summary"></div>
+                </div>
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
                     <input type="text" id="reservaSearch" placeholder="Buscar por nombre, teléfono..." oninput="filterReservas()">
@@ -2608,6 +2613,13 @@ class="login-logo">
                     </div>
                 </div>
 
+                <div class="emp-tables-section">
+                    <h4><i class="fas fa-chair"></i> Control de Mesas</h4>
+                    <p class="emp-tables-subtitle">Marca el estado de cada mesa según la situación actual</p>
+                    <div class="emp-tables-grid" id="empTablesGrid"></div>
+                    <div class="tables-summary"></div>
+                </div>
+
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
                     <input type="text" id="empleadoSearch" placeholder="Buscar por nombre, cargo, usuario..." oninput="filterEmpleados()">
@@ -2701,7 +2713,7 @@ class="login-logo">
         </div>
     </div>
 
-    <script src="script.js?v=18"></script>
+    <script src="script.js?v=19"></script>
     <script src="chatbot-reservas.js?v=7"></script>
 
     <!-- ============ CHATBOT ESTILO WHATSAPP ============ -->

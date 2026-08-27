@@ -5355,3 +5355,117 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(150,150,150,0.15);
     color: #999;
 }
+
+/* ============ TABLES GRID ============ */
+.tables-section, .emp-tables-section {
+    margin: 16px 0;
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.tables-section h4, .emp-tables-section h4 {
+    margin: 0 0 4px;
+    color: #C69A45;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.emp-tables-subtitle {
+    margin: 0 0 14px;
+    color: #999;
+    font-size: 0.82rem;
+}
+
+.tables-grid, .emp-tables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.table-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 6px;
+    border-radius: 10px;
+    cursor: default;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.table-cell .table-num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.table-cell .table-label {
+    font-size: 0.65rem;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
+
+.table-free {
+    background: rgba(40,167,69,0.1);
+    border-color: rgba(40,167,69,0.3);
+    color: #28a745;
+}
+
+.table-occupied {
+    background: rgba(220,53,69,0.1);
+    border-color: rgba(220,53,69,0.3);
+    color: #dc3545;
+    animation: pulse-occupied 2s infinite;
+}
+
+.table-reserved {
+    background: rgba(255,193,7,0.1);
+    border-color: rgba(255,193,7,0.3);
+    color: #ffc107;
+}
+
+@keyframes pulse-occupied {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220,53,69,0.2); }
+    50% { box-shadow: 0 0 0 4px rgba(220,53,69,0.1); }
+}
+
+.emp-table-cell {
+    cursor: pointer;
+}
+
+.emp-table-cell:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.tables-summary {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    font-size: 0.8rem;
+}
+
+.tables-summary span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tables-summary .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot-free { background: #28a745; }
+.dot-occupied { background: #dc3545; }
+.dot-reserved { background: #ffc107; }

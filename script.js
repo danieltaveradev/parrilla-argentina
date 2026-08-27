@@ -922,6 +922,8 @@ function openAdminPanel() {
     loadMenuData();
     loadOffersData();
     updateAdminPermissions();
+    renderTablesGrid('tablesGrid', false);
+    renderTablesGrid('empTablesGrid', true);
 }
 
 function closeAdmin() {
@@ -1851,6 +1853,56 @@ let empleados = JSON.parse(localStorage.getItem('parrillaEmpleados') || '[]');
 let currentOvertimeEmpId = null;
 let attendanceLog = JSON.parse(localStorage.getItem('parrillaAttendance') || '[]');
 let clockEmpId = null;
+
+// ============ GESTIÓN DE MESAS ============
+let mesas = JSON.parse(localStorage.getItem('parrillaMesas') || 'null');
+if (!mesas || mesas.length !== 20) {
+    mesas = [];
+    for (let i = 1; i <= 20; i++) {
+        mesas.push({ id: i, status: 'libre', reservation: null });
+    }
+    localStorage.setItem('parrillaMesas', JSON.stringify(mesas));
+}
+
+function renderTablesGrid(containerId, editable) {
+    const grid = document.getElementById(containerId);
+    if (!grid) return;
+    grid.innerHTML = mesas.map(m => {
+        const cls = m.status === 'ocupada' ? 'table-occupied' : m.status === 'reservada' ? 'table-reserved' : 'table-free';
+        const label = m.status === 'ocupada' ? 'Ocupada' : m.status === 'reservada' ? 'Reservada' : 'Libre';
+        const clickAttr = editable ? `onclick="toggleMesaStatus(${m.id})"` : '';
+        return `<div class="table-cell ${cls} ${editable ? 'emp-table-cell' : ''}" ${clickAttr}>
+            <div class="table-num">${m.id}</div>
+            <div class="table-label">${label}</div>
+        </div>`;
+    }).join('');
+    renderTablesSummary();
+}
+
+function renderTablesSummary() {
+    const libre = mesas.filter(m => m.status === 'libre').length;
+    const ocupada = mesas.filter(m => m.status === 'ocupada').length;
+    const reservada = mesas.filter(m => m.status === 'reservada').length;
+    const summaryEls = document.querySelectorAll('.tables-summary');
+    summaryEls.forEach(el => {
+        el.innerHTML = `
+            <span><span class="dot dot-free"></span> Libres: ${libre}</span>
+            <span><span class="dot dot-reserved"></span> Reservadas: ${reservada}</span>
+            <span><span class="dot dot-occupied"></span> Ocupadas: ${ocupada}</span>
+        `;
+    });
+}
+
+function toggleMesaStatus(id) {
+    const mesa = mesas.find(m => m.id === id);
+    if (!mesa) return;
+    const cycle = { 'libre': 'reservada', 'reservada': 'ocupada', 'ocupada': 'libre' };
+    mesa.status = cycle[mesa.status] || 'libre';
+    localStorage.setItem('parrillaMesas', JSON.stringify(mesas));
+    renderTablesGrid('empTablesGrid', true);
+    renderTablesGrid('tablesGrid', false);
+    showNotification(`Mesa ${id}: ${mesa.status.charAt(0).toUpperCase() + mesa.status.slice(1)}`);
+}
 
 function openEmployeeClock() {
     document.getElementById('empClockModal').style.display = 'flex';
