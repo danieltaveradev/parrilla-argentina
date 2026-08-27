@@ -106,9 +106,12 @@ async function sendToN8n(payload) {
         });
         if (response.ok) {
             console.log('✅ Enviado a n8n:', payload.tipo);
+            return true;
         }
+        return false;
     } catch (err) {
         console.error('❌ Error enviando a n8n:', err);
+        return false;
     }
 }
 
@@ -541,29 +544,77 @@ function generateInvoice() {
     document.getElementById('sendEmail').value = document.getElementById('checkoutEmail').value;
 }
 
+function buildInvoicePayload() {
+    const paymentNames = {
+        efectivo: 'Efectivo contra entrega',
+        tarjeta: 'Tarjeta de crédito/débito',
+        nequi: 'Nequi',
+        daviplata: 'Daviplata',
+        transferencia: 'Transferencia bancaria'
+    };
+    const subtotal = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const iva = Math.round(subtotal * 0.19);
+    const total = subtotal + iva;
+    const paymentEl = document.querySelector('input[name="payment"]:checked');
+    return {
+        tipo: 'factura',
+        factura: {
+            numero: document.getElementById('invoiceNumber')?.textContent || String(invoiceCounter).padStart(4, '0'),
+            fecha: new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            cliente: {
+                nombre: document.getElementById('checkoutName')?.value || document.getElementById('invClient')?.textContent || '',
+                cedula: document.getElementById('checkoutCedula')?.value || document.getElementById('invCedula')?.textContent || '',
+                direccion: document.getElementById('checkoutAddress')?.value || document.getElementById('invAddress')?.textContent || '',
+                email: document.getElementById('sendEmail')?.value || document.getElementById('checkoutEmail')?.value || document.getElementById('invEmail')?.textContent || ''
+            },
+            items: selectedItems.map(i => ({
+                cantidad: i.quantity,
+                producto: i.name,
+                precio: i.price,
+                subtotal: i.price * i.quantity
+            })),
+            subtotal: '$' + subtotal.toLocaleString(),
+            iva: '$' + iva.toLocaleString(),
+            total: '$' + total.toLocaleString(),
+            pago: paymentNames[paymentEl?.value || 'efectivo']
+        }
+    };
+}
+
 function sendInvoice() {
     const email = document.getElementById('sendEmail').value;
     if (!email) {
         showNotification('Ingresa un correo electrónico');
         return;
     }
-    
+
     const btn = document.querySelector('.btn-send-invoice');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     btn.disabled = true;
-    
-    setTimeout(() => {
+
+    const payload = buildInvoicePayload();
+    payload.factura.cliente.email = email;
+
+    sendToN8n(payload).then(ok => {
         btn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado!';
         btn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
-        
         showNotification(`Factura enviada a ${email}`);
-        
+
         setTimeout(() => {
             btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Factura';
             btn.style.background = '';
             btn.disabled = false;
         }, 3000);
-    }, 2000);
+    }).catch(() => {
+        btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+        btn.style.background = 'linear-gradient(135deg, #dc3545, #e74c3c)';
+        showNotification('Error al enviar factura. Intenta de nuevo.');
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Factura';
+            btn.style.background = '';
+            btn.disabled = false;
+        }, 3000);
+    });
 }
 
 function confirmOrder() {
@@ -602,6 +653,10 @@ function confirmOrder() {
             Estado: 'Pendiente'
         }
     });
+
+    const invoicePayload = buildInvoicePayload();
+    invoicePayload.factura.cliente.email = clientData.email;
+    sendToN8n(invoicePayload);
     
     setTimeout(() => {
         btn.innerHTML = '<i class="fas fa-check-circle"></i> ¡Pedido Confirmado!';

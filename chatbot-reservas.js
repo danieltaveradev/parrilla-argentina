@@ -205,6 +205,22 @@ async function guardarReservaChat(data) {
                 }
             })
         });
+
+        if (typeof sendToN8n === 'function' && data.email) {
+            await sendToN8n({
+                tipo: 'reserva_confirmada',
+                reserva: {
+                    nombre: data.nombre,
+                    email: data.email,
+                    telefono: data.telefono,
+                    fecha: formatearFecha(data.fecha),
+                    hora: formatearHora(data.hora),
+                    personas: data.personas,
+                    ubicacion: data.ubicacion || 'Local',
+                    celebracion: data.celebracion || 'Ninguna'
+                }
+            });
+        }
     } catch (e) {
         console.warn('⚠️ n8n reserva:', e.message);
     }
