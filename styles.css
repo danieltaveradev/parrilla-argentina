@@ -5469,3 +5469,142 @@ h1, h2, h3, h4, h5, h6 {
 .dot-free { background: #28a745; }
 .dot-occupied { background: #dc3545; }
 .dot-reserved { background: #ffc107; }
+
+/* ============ ADMIN & TABLES RESPONSIVE ============ */
+@media (max-width: 1024px) {
+    .admin-tabs {
+        flex-wrap: wrap;
+    }
+    .admin-tab {
+        flex: 1 1 33.33%;
+        padding: 14px 12px;
+        font-size: 0.85rem;
+    }
+    .tables-grid, .emp-tables-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+    .admin-tab {
+        flex: 0 0 auto;
+        min-width: 120px;
+        padding: 13px 14px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+    .admin-panel {
+        padding: 15px 12px;
+    }
+    .admin-header {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+    }
+    .btn-emp-clock {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+    .admin-stats-row, .clients-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .stat-card {
+        padding: 14px;
+    }
+    .admin-panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .admin-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .admin-actions select, .admin-actions .btn-export {
+        flex: 1 1 auto;
+    }
+    .tables-grid, .emp-tables-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+    }
+    .table-cell {
+        padding: 10px 4px;
+    }
+    .table-num {
+        font-size: 1.1rem;
+    }
+    .tables-section, .emp-tables-section {
+        padding: 12px;
+    }
+    .clients-table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .clients-table {
+        min-width: 700px;
+    }
+    .emp-clock-content {
+        padding: 24px 18px;
+        max-width: 350px;
+    }
+    .search-bar {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-tab {
+        min-width: 100px;
+        font-size: 0.75rem;
+        padding: 10px 10px;
+    }
+    .admin-tab i {
+        display: none;
+    }
+    .tables-grid, .emp-tables-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+    .table-cell {
+        padding: 8px 2px;
+        border-radius: 8px;
+    }
+    .table-num {
+        font-size: 1rem;
+    }
+    .table-label {
+        font-size: 0.55rem;
+    }
+    .tables-summary {
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 0.75rem;
+    }
+    .admin-stats-row, .clients-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .stat-card small {
+        font-size: 0.7rem;
+    }
+    .stat-card i {
+        font-size: 1.2rem;
+    }
+    .btn-emp-clock {
+        width: 100%;
+        justify-content: center;
+    }
+    .emp-clock-content h3 {
+        font-size: 1.1rem;
+    }
+    .employees-filter-row {
+        flex-direction: column;
+    }
+}
